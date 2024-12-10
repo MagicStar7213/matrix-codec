@@ -42,28 +42,35 @@ def decode(encodeMatrix: np.matrix=None) -> np.matrix:
   else:
     return None
 
-if __name__ == "__main__":
-  print("""
-  __  __           _            _        
- |  \/  |   __ _  | |_   _ __  (_) __  __
- | |\/| |  / _` | | __| | '__| | | \ \/ /
- | |  | | | (_| | | |_  | |    | |  >  < 
- |_|  |_|  \__,_|  \__| |_|    |_| /_/\_\\
-   ____               _                  
-  / ___|   ___     __| |   ___    ___    
- | |      / _ \   / _` |  / _ \  / __|   
- | |___  | (_) | | (_| | |  __/ | (__    
-  \____|  \___/   \__,_|  \___|  \___|   
+class main:
+  return_value: np.matrix
+  def __init__(self):
+    self.return_value = None
+  def app(self):
+    print("""
+    __  __           _            _        
+   |  \/  |   __ _  | |_   _ __  (_) __  __
+   | |\/| |  / _` | | __| | '__| | | \ \/ /
+   | |  | | | (_| | | |_  | |    | |  >  < 
+   |_|  |_|  \__,_|  \__| |_|    |_| /_/\_\\
+     ____               _                  
+    / ___|   ___     __| |   ___    ___    
+   | |      / _ \   / _` |  / _ \  / __|   
+   | |___  | (_) | | (_| | |  __/ | (__    
+    \____|  \___/   \__,_|  \___|  \___|   
                                          
-""")
-  return_value: np.matrix = None
-  while (True):
-    option=input("Choose option: Encode [e] or Decode [d]: ")
-    if option == "d":
-      return_value = decode()
-      while input("Do you want to keep the decoding? yes or no: ") == "yes":
-        return_value=decode(return_value)
-    elif option == "e":
-      return_value = encode()
-      while input("Do you want to keep the encoding? yes or no: ") == "yes":
-        return_value=encode(return_value)
+    """)
+    return_value: np.matrix = None
+    while (True):
+      option=input("Choose option: Encode [e] or Decode [d]: ")
+      if option == "d":
+        self.return_value = decode()
+        while input("Do you want to keep the decoding? yes or no: ") == "yes":
+          self.return_value=decode(self.return_value)
+      elif option == "e":
+        self.return_value = encode()
+        while input("Do you want to keep the encoding? yes or no: ") == "yes":
+          self.return_value=encode(self.return_value)
+
+if __name__ == "__main__":
+  main().app()
