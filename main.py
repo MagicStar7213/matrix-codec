@@ -1,22 +1,17 @@
-def decode():
-  order=int(input("Introduce matrix order: "))
-  matrixInput=input("Enter matrix numbers separated with ,: ").split(',') 
-  encodeMatrix=input("Enter encoding matrix numbers separated with ,: ").split(',')
-  matrix=[]
-  encode=[]
-  for i in range(0,order):
-    matrix[i] = []
-    encode[i] = []
-  for n in matrixInput:
-    for row in range(0,4):
-      if (len(matrix[row] >= 3)):
-        continue
-      else:
-        matrix[row].append(n)
-        break
-  numbers=input("Enter numbers separated by ,: ").split(",")
+import numpy as np
+
+def decode(encodeMatrix: np.matrix=None):
+  matrix=np.matrix(input("Enter matrix numbers separating columns with , and rows with ;: "), dtype=np.int64)
+  if encodeMatrix == None:
+    encodeMatrix=np.matrix(input("Enter encoding matrix numbers separating columns with , and rows with ;: "), dtype=np.int64)
+  mat_message=np.matmul(encodeMatrix.getI(), matrix)
+  
   abc=" ABCDEFGHIJKLMNOPQRSTUVWXYZ"
   result = ""
-  for it in numbers:
-    result+=abc[int(it)]
+  for column in mat_message.T.tolist():
+    for it in column:
+      result+=abc[round(it)]
   print(result)
+
+if __name__ == "__main__":
+  decode()
