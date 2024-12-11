@@ -12,11 +12,13 @@ Matrices should be introduced in a special way. Columns must be separated with c
 You must provide 2 inputs: the **message** and the **encoding matrix**. The message must be in all CAPS and cannot contain any special characters (`,.;:?'"-_+=!@#$%^&*()~|\\[]{}<>/` or accents) nor numbers. For example: `I LOVE PYTHON`
 
 After, choose an encoding matrix. **IT MUST BE SQUARE**, or it won't work. For example
-$$ \begin{bmatrix}
+```math
+\begin{bmatrix}
 1 & 2 & 3\\
 4 & 5 & 6\\
 7 & 8 & 9
-\end{bmatrix}$$
+\end{bmatrix}
+```
 
 When we plug it into the program, it looks like this `1,2,3;4,5,6;7,8,9`. Then the program gives the matrix or matrices containing the encoded message:
 ```
@@ -28,7 +30,7 @@ When we plug it into the program, it looks like this `1,2,3;4,5,6;7,8,9`. Then t
  [339  98   0]]
 ```
 that can be then represented:
-$$
+```math
 \begin{bmatrix}
 45 & 74 & 107\\
 108 & 200 & 230\\
@@ -39,7 +41,7 @@ $$
 210 & 56 & 0\\
 339 & 98 & 0
 \end{bmatrix}
-$$
+```
 
 ### Decoding
 To decode a message we need 2 inputs again: the matrix/matrices of the **encoded message** and the **encoding matrix**.
