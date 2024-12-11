@@ -47,3 +47,21 @@ that can be then represented:
 To decode a message we need 2 inputs again: the matrix/matrices of the **encoded message** and the **encoding matrix**.
 
 First you must input the matrices that form the encoded message, just like when encoding. However, to separate between matrices you must separate them with a space `' '`.
+
+Therefore the matrices 
+```math
+\begin{bmatrix}
+45 & 74 & 107\\
+108 & 200 & 230\\
+171 & 326 & 353
+\end{bmatrix}
+\begin{bmatrix}
+81 & 14 & 0\\
+210 & 56 & 0\\
+339 & 98 & 0
+\end{bmatrix}
+```
+would be introduced into the program like this: `45,74,107;108,200,230;171,326,353 81,14,0;210,56,0;339,98,0`. After, you input the encoding matrix `1,2,3;4,5,6;7,8,9` and it gives us the original message `I LOVE PYTHON`
+
+## Developing
+Note this script uses NumPy as math library, so it should be installed in order to develop further the script
