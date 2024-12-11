@@ -28,7 +28,9 @@ def decode(encodeMatrix: np.matrix=None) -> np.matrix:
     encodeMatrix=np.matrix(input("Enter encoding matrix numbers separating columns with , and rows with ;: "), dtype=np.int64)
   result=""
   for matrix in matrices.split(' '):
-    mat_message=np.matmul(encodeMatrix.getI(), np.matrix(matrix, dtype=np.int64))
+    mat_message=np.matmul(encodeMatrix.I, np.matrix(matrix, dtype=np.int64))
+    if mat_message.any(mat_message > 27.5):
+      mat_message=np.matmul(np.matrix(matrix, dtype=np.int64), encodeMatrix.I)
     abc=" ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     temp_result = ""
 
