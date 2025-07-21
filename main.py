@@ -10,6 +10,8 @@ def encode(encode_matrix: np.matrix = None) -> np.matrix or None:
     abc = " ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     message_list = list(message)
     char_list: list[int] = []
+    if message.islower():
+        abc = abc.lower()
     for letter in message_list:
         char_list.append(abc.index(letter))
     chunks = [char_list[i:i + (order * order)] for i in range(0, len(char_list), (order * order))]
