@@ -74,13 +74,15 @@ class Main:
         while True:
             option = input("Choose option: Encode [e] or Decode [d]: ")
             if option == "d":
-                self.return_value = decode()
-                while input("Do you want to keep decoding? yes or no: ") == "yes":
+                while True:
                     self.return_value = decode(self.return_value)
+                    if input("Do you want to keep decoding? yes or no: ") != "yes":
+                        break
             elif option == "e":
-                self.return_value = encode()
-                while input("Do you want to keep encoding? yes or no: ") == "yes":
+                while True:
                     self.return_value = encode(self.return_value)
+                    if input("Do you want to keep encoding? yes or no: ") != "yes":
+                        break
 
 
 if __name__ == "__main__":
