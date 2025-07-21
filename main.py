@@ -1,12 +1,12 @@
 import numpy as np
 
 
-def encode(encodeMatrix: np.matrix = None) -> np.matrix:
+def encode(encode_matrix: np.matrix = None) -> np.matrix:
     message = input("What message do you want to encode? ")
-    if encodeMatrix is None:
-        encodeMatrix = np.matrix(input("Enter encoding matrix numbers separating columns with , and rows with ;: "),
-                                 dtype=np.int64)
-    order = encodeMatrix.shape[1]
+    if encode_matrix is None:
+        encode_matrix = np.matrix(input("Enter encoding matrix numbers separating columns with , and rows with ;: "),
+                                  dtype=np.int64)
+    order = encode_matrix.shape[1]
     abc = " ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     message_list = list(message)
     for letter in message_list:
@@ -18,24 +18,24 @@ def encode(encodeMatrix: np.matrix = None) -> np.matrix:
             for i in range(order * order - array_length):
                 array.append(0)
         matrix = np.matrix(array, dtype=np.int64).reshape(order, order).T
-        print(np.matmul(encodeMatrix, matrix))
+        print(np.matmul(encode_matrix, matrix))
     if input("Do you want to keep the encoding matrix? yes or no: ") == "yes":
-        return encodeMatrix
+        return encode_matrix
     else:
         return None
 
 
-def decode(encodeMatrix: np.matrix = None) -> np.matrix:
+def decode(encode_matrix: np.matrix = None) -> np.matrix:
     matrices = input(
         "Enter matrix numbers separating columns with , and rows with ; and separate matrices with spaces ( ): ")
-    if encodeMatrix is None:
-        encodeMatrix = np.matrix(input("Enter encoding matrix numbers separating columns with , and rows with ;: "),
-                                 dtype=np.int64)
+    if encode_matrix is None:
+        encode_matrix = np.matrix(input("Enter encoding matrix numbers separating columns with , and rows with ;: "),
+                                  dtype=np.int64)
     result = ""
     for matrix in matrices.split(' '):
-        mat_message = np.matmul(encodeMatrix.I, np.matrix(matrix, dtype=np.int64))
+        mat_message = np.matmul(encode_matrix.I, np.matrix(matrix, dtype=np.int64))
         if mat_message.any(mat_message > 27.5):
-            mat_message = np.matmul(np.matrix(matrix, dtype=np.int64), encodeMatrix.I)
+            mat_message = np.matmul(np.matrix(matrix, dtype=np.int64), encode_matrix.I)
         abc = " ABCDEFGHIJKLMNOPQRSTUVWXYZ"
         temp_result = ""
 
@@ -45,12 +45,12 @@ def decode(encodeMatrix: np.matrix = None) -> np.matrix:
         result += temp_result
     print(result)
     if input("Do you want to keep the encoding matrix? yes or no: ") == "yes":
-        return encodeMatrix
+        return encode_matrix
     else:
         return None
 
 
-class main:
+class Main:
     return_value: np.matrix
 
     def __init__(self):
@@ -71,7 +71,7 @@ class main:
                                          
     """)
         return_value: np.matrix = None
-        while (True):
+        while True:
             option = input("Choose option: Encode [e] or Decode [d]: ")
             if option == "d":
                 self.return_value = decode()
@@ -84,4 +84,4 @@ class main:
 
 
 if __name__ == "__main__":
-    main().app()
+    Main().app()
