@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def encode(encode_matrix: np.matrix = None) -> np.matrix:
+def encode(encode_matrix: np.matrix = None) -> np.matrix or None:
     message = input("What message do you want to encode? ")
     if encode_matrix is None:
         encode_matrix = np.matrix(input("Enter encoding matrix numbers separating columns with , and rows with ;: "),
@@ -26,7 +26,7 @@ def encode(encode_matrix: np.matrix = None) -> np.matrix:
         return None
 
 
-def decode(encode_matrix: np.matrix = None) -> np.matrix:
+def decode(encode_matrix: np.matrix = None) -> np.matrix or None:
     matrices = input(
         "Enter matrix numbers separating columns with , and rows with ; and separate matrices with spaces ( ): ")
     if encode_matrix is None:
@@ -52,7 +52,7 @@ def decode(encode_matrix: np.matrix = None) -> np.matrix:
 
 
 class Main:
-    return_value: np.matrix
+    return_value: np.matrix or None
 
     def __init__(self):
         self.return_value = None
