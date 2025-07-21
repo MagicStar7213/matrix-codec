@@ -71,7 +71,6 @@ class Main:
     \\____|  \\___/   \\__,_|  \\___|  \\___|   
                                          
     """)
-        return_value: np.matrix = None
         while True:
             option = input("Choose option: Encode [e] or Decode [d]: ")
             if option == "d":
