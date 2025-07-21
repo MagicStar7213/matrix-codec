@@ -9,9 +9,10 @@ def encode(encode_matrix: np.matrix = None) -> np.matrix:
     order = encode_matrix.shape[1]
     abc = " ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     message_list = list(message)
+    char_list: list[int] = []
     for letter in message_list:
-        message_list[message_list.index(letter)] = abc.index(letter)
-    chunks = [message_list[i:i + (order * order)] for i in range(0, len(message_list), (order * order))]
+        char_list.append(abc.index(letter))
+    chunks = [char_list[i:i + (order * order)] for i in range(0, len(char_list), (order * order))]
     for array in chunks:
         if len(array) < order * order:
             array_length = len(array)
