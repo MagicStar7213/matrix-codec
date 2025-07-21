@@ -74,7 +74,7 @@ class Main:
                                          
     """)
         while True:
-            option = input("Choose option: Encode [e] or Decode [d]: ")
+            option = input("Choose option: Encode [e], Decode [d] or Exit [q]: ")
             if option == "d":
                 while True:
                     self.return_value = decode(self.return_value)
@@ -85,6 +85,9 @@ class Main:
                     self.return_value = encode(self.return_value)
                     if input("Do you want to keep encoding? yes or no: ") != "yes":
                         break
+            elif option == "q":
+                print("Exiting...")
+                exit(0)
 
 
 if __name__ == "__main__":
