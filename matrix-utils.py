@@ -1,6 +1,7 @@
 import numpy as np
 
 def producto():
+    print("PRODUCTO")
     print("Los elementos de la matriz deben separarse por / y cada fila con //")
     matrix1 = np.matrix(input("Introduce la primera matriz: ").replace("//", ";").replace("/", ","), dtype=np.int64)
     matrix2 = np.matrix(input("Introduce la segunda matriz: ").replace("//", ";").replace("/", ","), dtype=np.int64)
@@ -8,12 +9,14 @@ def producto():
     print(np.matmul(matrix1, matrix2))
 
 def adjunta():
+    print("ADJUNTA")
     print("Los elementos de la matriz deben separarse por / y cada fila con //")
     matrix = np.matrix(input("Introduce la matriz: ").replace("//", ";").replace("/", ","), dtype=np.int64)
     print("Resultado:")
     print((matrix.I * round(np.linalg.det(matrix))).T.round())
 
 def determinante():
+    print("DETERMINANTE")
     print("Los elementos de la matriz deben separarse por / y cada fila con //")
     matrix = np.matrix(input("Introduce la matriz: ").replace("//", ";").replace("/", ","), dtype=np.int64)
     print("Resultado:")
