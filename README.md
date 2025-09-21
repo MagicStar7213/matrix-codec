@@ -11,8 +11,8 @@ Matrices should be introduced in a special way. Columns must be separated with s
 ### Product (Multiplication)
 You enter the first matrix, hit `Enter ⏎` and then the second matrix.
 
-For example, if I wanted to enter the matrix $\begin{bmatrix} 1 & -2 & 1\\0 & -3 & 4\\2 & 1 & -1 \end{bmatrix}$ I would have to type it like this: `1/-2/1//0/-3/4//2/1/-1` 
-and then enter the second matrix $\begin{bmatrix} 2 & -1 & 1\\3 & 0 & -2\\-1 & 4 & 3 \end{bmatrix}$ which would turn into `2/-1/1//3/0/-2//-1/4/3`.
+For example, if I wanted to enter the matrix $`\begin{bmatrix} 1 & -2 & 1\\0 & -3 & 4\\2 & 1 & -1 \end{bmatrix}`$ I would have to type it like this: `1/-2/1//0/-3/4//2/1/-1` 
+and then enter the second matrix $`\begin{bmatrix} 2 & -1 & 1\\3 & 0 & -2\\-1 & 4 & 3 \end{bmatrix}`$ which would turn into `2/-1/1//3/0/-2//-1/4/3`.
 
 The result would then be: 
 ```
@@ -20,16 +20,16 @@ The result would then be:
 [-13  16  18]
 [  8  -6  -3]]
 ```
-or $\begin{bmatrix} -5 & 3 & 8\\-13 & 16 & 18\\8 & -6 & -3 \end{bmatrix}$
+or $`\begin{bmatrix} -5 & 3 & 8\\-13 & 16 & 18\\8 & -6 & -3 \end{bmatrix}`$
 
 ### Determinant
-You enter the matrix you want to calculate the determinant of, for example $\begin{vmatrix} 1 & -2 & 1\\0 & -3 & 4\\2 & 1 & -1 \end{vmatrix}$,
+You enter the matrix you want to calculate the determinant of, for example $`\begin{vmatrix} 1 & -2 & 1\\0 & -3 & 4\\2 & 1 & -1 \end{vmatrix}`$,
 which you would type as `1/-2/1//0/-3/4//2/1/-1`.
 
 The output is the result: `-11`
 
 ### Adjugate (conjugate)
-To calculate de adjugate you type the matrix you want, for example this one: $\begin{bmatrix} 1 & -2 & 1\\0 & -3 & 4\\2 & 1 & -1 \end{bmatrix}$
+To calculate de adjugate you type the matrix you want, for example this one: $`\begin{bmatrix} 1 & -2 & 1\\0 & -3 & 4\\2 & 1 & -1 \end{bmatrix}`$
 in the form: `1/-2/1//0/-3/4//2/1/-1`.
 
 Result:
@@ -38,19 +38,18 @@ Result:
  [-1. -3. -5.]
  [-5. -4. -3.]]
 ```
-or $\begin{bmatrix} -1 & 8 & 6\\-1 & -3 & -5\\-5 & -4 & -3 \end{bmatrix}$
+or $`\begin{bmatrix} -1 & 8 & 6\\-1 & -3 & -5\\-5 & -4 & -3 \end{bmatrix}`$
 
 ### Encoding
 You must provide 2 inputs: the **message** and the **encoding matrix**. The message must be in all CAPS and cannot contain any special characters (`,.;:?'"-_+=!@#$%^&*()~|\\[]{}<>/` or accents) nor numbers. For example: `I LOVE PYTHON`
 
 After, choose an encoding matrix. **IT MUST BE SQUARE**, or it won't work. For example
-$$
-\begin{bmatrix}
+
+$`\begin{bmatrix}
 1 & 2 & 3\\
 4 & 5 & 6\\
 7 & 8 & 9
-\end{bmatrix}
-$$
+\end{bmatrix}`$
 
 When we plug it into the program, it looks like this `1/2/3//4/5/6//7/8/9`. Then the program gives the matrix or matrices containing the encoded message:
 ```
@@ -62,8 +61,8 @@ When we plug it into the program, it looks like this `1/2/3//4/5/6//7/8/9`. Then
  [339  98   0]]
 ```
 that can be then represented:
-$$
-\begin{bmatrix}
+
+$`\begin{bmatrix}
 45 & 74 & 107\\
 108 & 200 & 230\\
 171 & 326 & 353
@@ -72,8 +71,7 @@ $$
 81 & 14 & 0\\
 210 & 56 & 0\\
 339 & 98 & 0
-\end{bmatrix}
-$$
+\end{bmatrix}`$
 
 ### Decoding
 To decode a message we need 2 inputs again: the matrix/matrices of the **encoded message** and the **encoding matrix**.
@@ -81,8 +79,8 @@ To decode a message we need 2 inputs again: the matrix/matrices of the **encoded
 First you must input the matrices that form the encoded message, just like when encoding. However, to separate between matrices you must separate them with a space `' '`.
 
 Therefore the matrices 
-$$
-\begin{bmatrix}
+
+$`\begin{bmatrix}
 45 & 74 & 107\\
 108 & 200 & 230\\
 171 & 326 & 353
@@ -91,8 +89,8 @@ $$
 81 & 14 & 0\\
 210 & 56 & 0\\
 339 & 98 & 0
-\end{bmatrix}
-$$
+\end{bmatrix}`$
+
 would be introduced into the program like this: `45/74/107//108/200/230//171/326/353 81/14/0//210/56/0//339/98/0`. After, you input the encoding matrix `1/2/3//4/5/6//7/8/9` and it gives us the original message `I LOVE PYTHON`
 
 ## Developing
