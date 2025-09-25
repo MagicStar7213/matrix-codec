@@ -6,7 +6,7 @@ Matrix Utils is a set of Python scripts that allows you to calculate the product
 
 ## Usage
 The encoding function only allows uppercase letters and spaces for now.
-Matrices should be introduced in a special way. Columns must be separated with single slashes `/` and rows with double slashes `//`. Also multiple matrices are separated from each other with spaces  `" "`
+Matrices should be introduced in a special way. Columns must be separated with single slashes `/` and rows with double slashes `//`. Also, multiple matrices are separated from each other with spaces  `" "`
 
 ### Product (Multiplication)
 You enter the first matrix, hit `Enter ⏎` and then the second matrix.
@@ -78,7 +78,7 @@ To decode a message we need 2 inputs again: the matrix/matrices of the **encoded
 
 First you must input the matrices that form the encoded message, just like when encoding. However, to separate between matrices you must separate them with a space `' '`.
 
-Therefore the matrices 
+Therefore, the matrices 
 
 $`\begin{bmatrix}
 45 & 74 & 107\\
