@@ -1,11 +1,12 @@
-import numpy as np
+from sympy import init_printing, Matrix, pprint
+from utils import list_is_ints
 
 
-def encode(encode_matrix: np.matrix = None) -> np.matrix or None:
+def encode(encode_matrix):
     message = input("What message do you want to encode? ")
     if encode_matrix is None:
-        encode_matrix = np.matrix(input("Enter encoding matrix numbers separating columns with , and rows with ;: "),
-                                  dtype=np.int64)
+        encode_string = [m.split('/') for m in input("Enter encoding matrix numbers separating columns with / and rows with //: \n").split('//')]
+        encode_matrix = Matrix([list(map(int if list_is_ints(i) else float, i)) for i in encode_string])
     order = encode_matrix.shape[1]
     abc = " ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     message_list = list(message)
@@ -20,25 +21,27 @@ def encode(encode_matrix: np.matrix = None) -> np.matrix or None:
             array_length = len(array)
             for i in range(order * order - array_length):
                 array.append(0)
-        matrix = np.matrix(array, dtype=np.int64).reshape(order, order).T
-        print(np.matmul(encode_matrix, matrix))
+        matrix = Matrix(array).reshape(order, order).T
+        pprint(encode_matrix*matrix)
+        print(" ")
     if input("Do you want to keep the encoding matrix? yes or no: ") == "yes":
         return encode_matrix
     else:
         return None
 
 
-def decode(encode_matrix: np.matrix = None) -> np.matrix or None:
+def decode(encode_matrix):
     matrices = input(
-        "Enter matrix numbers separating columns with , and rows with ; and separate matrices with spaces ( ): ")
+        "Enter matrix numbers separating columns with / and rows with // and separate matrices with spaces ( ): ")
     if encode_matrix is None:
-        encode_matrix = np.matrix(input("Enter encoding matrix numbers separating columns with , and rows with ;: "),
-                                  dtype=np.int64)
+        encode_string = [m.split('/') for m in input("Enter encoding matrix numbers separating columns with / and rows with //: ").split('//')]
+        encode_matrix = Matrix([list(map(int if list_is_ints(i) else float, i)) for i in encode_string])
     result = ""
-    for matrix in matrices.split(' '):
-        mat_message = np.matmul(encode_matrix.I, np.matrix(matrix, dtype=np.int64))
-        if mat_message.any(mat_message > 27.5):
-            mat_message = np.matmul(np.matrix(matrix, dtype=np.int64), encode_matrix.I)
+    for raw_matrix in matrices.split(' '):
+        matrix = Matrix([list(map(int if list_is_ints(i) else float, i)) for i in [m.split('/') for m in raw_matrix.split('//')]])
+        mat_message = (encode_matrix**-1)*matrix
+        if any(i > 27.5 for line in mat_message.tolist() for i in line):
+            mat_message = matrix*(encode_matrix**-1)
         abc = " ABCDEFGHIJKLMNOPQRSTUVWXYZ"
         temp_result = ""
 
@@ -54,9 +57,8 @@ def decode(encode_matrix: np.matrix = None) -> np.matrix or None:
 
 
 class Main:
-    return_value: np.matrix or None
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.return_value = None
 
     def app(self):
@@ -93,4 +95,5 @@ class Main:
 
 
 if __name__ == "__main__":
+    init_printing(use_unicode=True)
     Main().app()

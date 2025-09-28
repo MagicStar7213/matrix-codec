@@ -1,27 +1,37 @@
-import numpy as np
+from sympy import init_printing, Matrix, pprint, nsimplify
+from utils import list_is_ints, matrix_is_zero
+
 
 def producto():
     print("PRODUCTO")
     print("Los elementos de la matriz deben separarse por / y cada fila con //")
-    matrix1 = np.matrix(input("Introduce la primera matriz: ").replace("//", ";").replace("/", ","), dtype=np.int64)
-    matrix2 = np.matrix(input("Introduce la segunda matriz: ").replace("//", ";").replace("/", ","), dtype=np.int64)
+    message1 = [m.split('/') for m in input("Introduce la primera matriz: ").split('//')] # Split string input into 2D array
+    message2 = [m.split('/') for m in input("Introduce la segunda matriz: ").split('//')]
+    A = Matrix([list(map(int if list_is_ints(i) else float, i)) for i in message1]) # Convert all elements of matrix to float
+    B = Matrix([list(map(int if list_is_ints(i) else float, i)) for i in message2])
     print("Resultado:")
-    print(np.matmul(matrix1, matrix2))
+    result = A*B
+    pprint(Matrix([list(map(int if list_is_ints(i) else nsimplify, i)) for i in result]))
 
 def adjunta():
     print("ADJUNTA")
     print("Los elementos de la matriz deben separarse por / y cada fila con //")
-    matrix = np.matrix(input("Introduce la matriz: ").replace("//", ";").replace("/", ","), dtype=np.int64)
-    print("Resultado:")
-    print((matrix.I * round(np.linalg.det(matrix))).T.round())
+    message = [m.split('/') for m in input("Introduce la matriz: ").split('//')] # Split string input into 2D array
+    A = Matrix([list(map(int if list_is_ints(i) else float, i)) for i in message]) # Convert all elements of matrix to float
+    print("Resultado: \n")
+    result = A.adjugate().tolist()
+    pprint(Matrix([list(map(int if list_is_ints(i) else nsimplify, i)) for i in result]))
 
 def determinante():
     print("DETERMINANTE")
     print("Los elementos de la matriz deben separarse por / y cada fila con //")
-    matrix = np.matrix(input("Introduce la matriz: ").replace("//", ";").replace("/", ","), dtype=np.int64)
+    message = [m.split('/') for m in input("Introduce la matriz: ").split('//')] # Split string input into 2D array
+    A = Matrix([list(map(int if list_is_ints(i) else float, i)) for i in message]) # Convert all elements of matrix to float
     print("Resultado:")
-    print(round(np.linalg.det(matrix)))
+    result = A.det(iszerofunc=matrix_is_zero)
+    pprint(int(result) if float(result).is_integer() else result)
 
+init_printing(use_unicode=True)
 print("""
     __  __           _            _        
    |  \\/  |   __ _  | |_   _ __  (_) __  __
