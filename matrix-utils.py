@@ -9,7 +9,7 @@ def producto():
     message2 = [m.split('/') for m in input("Introduce la segunda matriz: ").split('//')]
     A = Matrix([list(map(int if list_is_ints(i) else float, i)) for i in message1]) # Convert all elements of matrix to float
     B = Matrix([list(map(int if list_is_ints(i) else float, i)) for i in message2])
-    print("Resultado:")
+    print("Resultado:\n")
     result = A*B
     pprint(Matrix([list(map(int if list_is_ints(i) else nsimplify, i)) for i in result]))
 
@@ -31,6 +31,15 @@ def determinante():
     result = A.det(iszerofunc=matrix_is_zero)
     pprint(int(result) if float(result).is_integer() else result)
 
+def inversa():
+    print("INVERSA")
+    print("Los elementos de la matriz deben separarse por / y cada fila con //")
+    message = [m.split('/') for m in input("Introduce la matriz: ").split('//')] # Split string input into 2D array
+    A = Matrix([list(map(int if list_is_ints(i) else float, i)) for i in message]) # Convert all elements of matrix to float
+    print("Resultado:\n")
+    result = (A**-1).tolist()
+    pprint(Matrix([list(map(int if list_is_ints(i) else nsimplify, i)) for i in result]))
+
 init_printing(use_unicode=True)
 print("""
     __  __           _            _        
@@ -41,13 +50,15 @@ print("""
                                     
     """)
 while True:
-    option = input("Elige una opción: Adjunta [a], Determinante [d], Producto [p] o Salir [q]: ")
+    option = input("Elige una opción: Adjunta [a], Determinante [d], Producto [p], Inversa [i] o Salir [q]: ")
     if option == "d":
         determinante()
     elif option == "a":
         adjunta()
     elif option == "p":
         producto()
+    elif option == "i":
+        inversa()
     elif option == "q":
         print("Saliendo...")
         exit(0)
