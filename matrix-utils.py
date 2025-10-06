@@ -1,4 +1,4 @@
-from sympy import NonSquareMatrixError, init_printing, Matrix, pprint, nsimplify
+from sympy import NonSquareMatrixError, ShapeError, init_printing, Matrix, pprint, nsimplify
 from utils import list_is_ints, matrix_is_zero
 
 
@@ -10,8 +10,16 @@ def producto():
     A = Matrix([list(map(int if list_is_ints(i) else float, i)) for i in message1]) # Convert all elements of matrix to float
     B = Matrix([list(map(int if list_is_ints(i) else float, i)) for i in message2])
     print("Resultado:\n")
-    result = A*B
-    pprint(Matrix([list(map(int if list_is_ints(i) else nsimplify, i)) for i in result]))
+    try:
+        result = A*B
+    except ShapeError:
+        print(f"ERROR: A ({A.rows}x{A.cols}) is not multipliable with B ({B.rows}x{B.cols})")
+        if input("Try again? [Y/n]").lower() == "y":
+            producto()
+        else:
+            exit(1)
+    else:
+        pprint(Matrix([list(map(int if list_is_ints(i) else nsimplify, i)) for i in result]))
 
 def adjunta():
     print("ADJUNTA")
@@ -19,8 +27,16 @@ def adjunta():
     message = [m.split('/') for m in input("Introduce la matriz: ").split('//')] # Split string input into 2D array
     A = Matrix([list(map(int if list_is_ints(i) else float, i)) for i in message]) # Convert all elements of matrix to float
     print("Resultado: \n")
-    result = A.adjugate().tolist()
-    pprint(Matrix([list(map(int if list_is_ints(i) else nsimplify, i)) for i in result]))
+    try:
+        result = A.adjugate().tolist()
+    except NonSquareMatrixError:
+        print("ERROR: Given matrix not square, thus there cannot be an adjugate of A.")
+        if input("Try again? [Y/n]").lower() == "y":
+            adjunta()
+        else:
+            exit(1)
+    else:
+        pprint(Matrix([list(map(int if list_is_ints(i) else nsimplify, i)) for i in result]))
 
 def determinante():
     print("DETERMINANTE")
@@ -28,8 +44,16 @@ def determinante():
     message = [m.split('/') for m in input("Introduce la matriz: ").split('//')] # Split string input into 2D array
     A = Matrix([list(map(int if list_is_ints(i) else float, i)) for i in message]) # Convert all elements of matrix to float
     print("Resultado:")
-    result = A.det(iszerofunc=matrix_is_zero)
-    pprint(int(result) if float(result).is_integer() else result)
+    try:
+        result = A.det(iszerofunc=matrix_is_zero)
+    except NonSquareMatrixError:
+        print("ERROR: Given matrix not square, thus there cannot be a determinant for A.")
+        if input("Try again? [Y/n]").lower() == "y":
+            determinante()
+        else:
+            exit(1)
+    else:
+        pprint(int(result) if float(result).is_integer() else result)
 
 def inversa():
     print("INVERSA")
