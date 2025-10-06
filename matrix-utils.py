@@ -1,4 +1,4 @@
-from sympy import init_printing, Matrix, pprint, nsimplify
+from sympy import NonSquareMatrixError, init_printing, Matrix, pprint, nsimplify
 from utils import list_is_ints, matrix_is_zero
 
 
@@ -37,8 +37,22 @@ def inversa():
     message = [m.split('/') for m in input("Introduce la matriz: ").split('//')] # Split string input into 2D array
     A = Matrix([list(map(int if list_is_ints(i) else float, i)) for i in message]) # Convert all elements of matrix to float
     print("Resultado:\n")
-    result = (A**-1).tolist()
-    pprint(Matrix([list(map(int if list_is_ints(i) else nsimplify, i)) for i in result]))
+    try:
+        result = (A.inv()).tolist()
+    except NonSquareMatrixError:
+        print("ERROR: Given matrix not square, thus not invertible")
+        if input("Try again? [Y/n]").lower() == "y":
+            inversa()
+        else:
+            exit(1)
+    except ValueError:
+        print("ERROR: The determinant of the given matrix is 0, thus it cannot be inverted")
+        if input("Try again? [Y/n]").lower() == "y":
+            inversa()
+        else:
+            exit(1)
+    else:
+        pprint(Matrix([list(map(int if list_is_ints(i) else nsimplify, i)) for i in result]))
 
 init_printing(use_unicode=True)
 print("""
