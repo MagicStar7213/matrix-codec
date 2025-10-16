@@ -1,5 +1,6 @@
-from sympy import NonSquareMatrixError, ShapeError, init_printing, Matrix, pprint, nsimplify
-from utils import list_is_ints, matrix_is_zero
+from sympy import NonSquareMatrixError, ShapeError, init_printing, Matrix, pprint, nsimplify, parse_expr
+import sympy
+from utils import list_is_ints, matrix_is_zero, list_to_matrix
 
 
 def producto():
@@ -7,8 +8,8 @@ def producto():
     print("Los elementos de la matriz deben separarse por / y cada fila con //")
     message1 = [m.split('/') for m in input("Introduce la primera matriz: ").split('//')] # Split string input into 2D array
     message2 = [m.split('/') for m in input("Introduce la segunda matriz: ").split('//')]
-    A = Matrix([list(map(int if list_is_ints(i) else float, i)) for i in message1]) # Convert all elements of matrix to float
-    B = Matrix([list(map(int if list_is_ints(i) else float, i)) for i in message2])
+    A = list_to_matrix(message1)
+    B = list_to_matrix(message2)
     print("Resultado:\n")
     try:
         result = A*B
@@ -19,16 +20,17 @@ def producto():
         else:
             exit(1)
     else:
-        pprint(Matrix([list(map(int if list_is_ints(i) else nsimplify, i)) for i in result]))
+        pprint(result.applyfunc(nsimplify))
+        
 
 def adjunta():
     print("ADJUNTA")
     print("Los elementos de la matriz deben separarse por / y cada fila con //")
     message = [m.split('/') for m in input("Introduce la matriz: ").split('//')] # Split string input into 2D array
-    A = Matrix([list(map(int if list_is_ints(i) else float, i)) for i in message]) # Convert all elements of matrix to float
+    A = list_to_matrix(message)
     print("Resultado: \n")
     try:
-        result = A.adjugate().tolist()
+        result = A.adjugate()
     except NonSquareMatrixError:
         print("ERROR: Given matrix not square, thus there cannot be an adjugate of A.")
         if input("Try again? [Y/n]").lower() == "y":
@@ -36,13 +38,13 @@ def adjunta():
         else:
             exit(1)
     else:
-        pprint(Matrix([list(map(int if list_is_ints(i) else nsimplify, i)) for i in result]))
+        pprint(result.applyfunc(nsimplify))
 
 def determinante():
     print("DETERMINANTE")
     print("Los elementos de la matriz deben separarse por / y cada fila con //")
-    message = [m.split('/') for m in input("Introduce la matriz: ").split('//')] # Split string input into 2D array
-    A = Matrix([list(map(int if list_is_ints(i) else float, i)) for i in message]) # Convert all elements of matrix to float
+    message:list[list[str]] = [m.split('/') for m in input("Introduce la matriz: ").split('//')] # Split string input into 2D array
+    A = list_to_matrix(message)
     print("Resultado:")
     try:
         result = A.det(iszerofunc=matrix_is_zero)
@@ -53,7 +55,7 @@ def determinante():
         else:
             exit(1)
     else:
-        pprint(int(result) if float(result).is_integer() else result)
+        pprint(sympy.factor(nsimplify(result)))
 
 def inversa():
     print("INVERSA")

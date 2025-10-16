@@ -1,12 +1,12 @@
-from sympy import NonSquareMatrixError, init_printing, Matrix, pprint
-from utils import list_is_ints
+from sympy import NonSquareMatrixError, init_printing, Matrix, nsimplify, pprint
+from utils import list_is_ints, list_to_matrix
 
 
 def encode(encode_matrix):
     message = input("What message do you want to encode? ")
     if encode_matrix is None:
         encode_string = [m.split('/') for m in input("Enter encoding matrix numbers separating columns with / and rows with //: \n").split('//')]
-        encode_matrix = Matrix([list(map(int if list_is_ints(i) else float, i)) for i in encode_string])
+        encode_matrix = list_to_matrix(encode_string)
     try:
         encode_matrix.inv()
     except NonSquareMatrixError:
@@ -37,7 +37,7 @@ def encode(encode_matrix):
                 for i in range(order * order - array_length):
                     array.append(0)
             matrix = Matrix(array).reshape(order, order).T
-            pprint(encode_matrix*matrix)
+            pprint((encode_matrix*matrix).applyfunc(nsimplify))
             print(" ")
         if input("Do you want to keep the encoding matrix? yes or no: ") == "yes":
             return encode_matrix
@@ -50,7 +50,7 @@ def decode(encode_matrix):
         "Enter matrix numbers separating columns with / and rows with // and separate matrices with spaces ( ): ")
     if encode_matrix is None:
         encode_string = [m.split('/') for m in input("Enter encoding matrix numbers separating columns with / and rows with //: ").split('//')]
-        encode_matrix = Matrix([list(map(int if list_is_ints(i) else float, i)) for i in encode_string])
+        encode_matrix = list_to_matrix(encode_string)
     try:
         encode_matrix.inv()
     except NonSquareMatrixError:
@@ -68,10 +68,10 @@ def decode(encode_matrix):
     else:
         result = ""
         for raw_matrix in matrices.split(' '):
-            matrix = Matrix([list(map(int if list_is_ints(i) else float, i)) for i in [m.split('/') for m in raw_matrix.split('//')]])
-            mat_message = (encode_matrix**-1)*matrix
+            matrix = list_to_matrix([m.split('/') for m in raw_matrix.split('//')])
+            mat_message = encode_matrix.inv()*matrix
             if any(i > 27.5 for line in mat_message.tolist() for i in line):
-                mat_message = matrix*(encode_matrix**-1)
+                mat_message = matrix*encode_matrix.inv()
             abc = " ABCDEFGHIJKLMNOPQRSTUVWXYZ"
             temp_result = ""
 
