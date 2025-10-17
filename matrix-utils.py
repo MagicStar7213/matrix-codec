@@ -61,7 +61,7 @@ def inversa():
     print("INVERSA")
     print("Los elementos de la matriz deben separarse por / y cada fila con //")
     message = [m.split('/') for m in input("Introduce la matriz: ").split('//')] # Split string input into 2D array
-    A = Matrix([list(map(int if list_is_ints(i) else float, i)) for i in message]) # Convert all elements of matrix to float
+    A = list_to_matrix(message)
     print("Resultado:\n")
     try:
         result = (A.inv()).tolist()
@@ -78,7 +78,7 @@ def inversa():
         else:
             exit(1)
     else:
-        pprint(Matrix([list(map(int if list_is_ints(i) else nsimplify, i)) for i in result]))
+        pprint(sympy.factor(nsimplify(result)))
 
 init_printing(use_unicode=True)
 print("""
