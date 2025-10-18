@@ -80,7 +80,7 @@ def inversa():
     else:
         pprint(sympy.factor(nsimplify(result)))
 
-init_printing(use_unicode=True)
+init_printing()
 print("""
     __  __           _            _        
    |  \\/  |   __ _  | |_   _ __  (_) __  __
