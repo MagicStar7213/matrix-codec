@@ -93,13 +93,29 @@ print("""
 while True:
     option = input("Elige una opción: Adjunta [a], Determinante [d], Producto [p], Inversa [i] o Salir [q]: ")
     if option == "d":
-        determinante()
+        try:
+            determinante()
+        except KeyboardInterrupt:
+            print()
+            continue
     elif option == "a":
-        adjunta()
+        try:
+            adjunta()
+        except KeyboardInterrupt:
+            print()
+            continue
     elif option == "p":
-        producto()
+        try:
+            producto()
+        except KeyboardInterrupt:
+            print()
+            continue
     elif option == "i":
-        inversa()
+        try:
+            inversa()
+        except KeyboardInterrupt:
+            print()
+            continue
     elif option == "q":
         print("Saliendo...")
         exit(0)
