@@ -1,6 +1,6 @@
-from sympy import NonSquareMatrixError, ShapeError, init_printing, Matrix, pprint, nsimplify, parse_expr
+from sympy import NonSquareMatrixError, ShapeError, init_printing, pprint, nsimplify
 import sympy
-from utils import list_is_ints, matrix_is_zero, list_to_matrix
+from utils import matrix_is_zero, list_to_matrix
 
 
 def producto():
