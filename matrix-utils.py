@@ -64,7 +64,7 @@ def inversa():
     A = list_to_matrix(message)
     print("Resultado:\n")
     try:
-        result = (A.inv()).tolist()
+        result = A.inv()
     except NonSquareMatrixError:
         print("ERROR: Given matrix not square, thus not invertible")
         if input("Try again? [Y/n]").lower() == "y":
