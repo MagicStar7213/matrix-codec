@@ -15,7 +15,7 @@ def producto():
         result = A*B
     except ShapeError:
         print(f"ERROR: A ({A.rows}x{A.cols}) is not multipliable with B ({B.rows}x{B.cols})")
-        if input("Try again? [Y/n]").lower() == "y":
+        if input("Try again? [Y/n] ").lower() == "y":
             producto()
         else:
             exit(1)
@@ -33,7 +33,7 @@ def adjunta():
         result = A.adjugate()
     except NonSquareMatrixError:
         print("ERROR: Given matrix not square, thus there cannot be an adjugate of A.")
-        if input("Try again? [Y/n]").lower() == "y":
+        if input("Try again? [Y/n] ").lower() == "y":
             adjunta()
         else:
             exit(1)
@@ -50,13 +50,13 @@ def determinante():
         result = A.det(iszerofunc=matrix_is_zero)
     except NonSquareMatrixError:
         print("ERROR: Given matrix not square, thus there cannot be a determinant for A.")
-        if input("Try again? [Y/n]").lower() == "y":
+        if input("Try again? [Y/n] ").lower() == "y":
             determinante()
         else:
             exit(1)
     except  ValueError:
         print('ERROR: Mismatched dimensions.')
-        if input("Try again? [Y/n]").lower() == "y":
+        if input("Try again? [Y/n] ").lower() == "y":
             determinante()
         else:
             exit(1)
@@ -73,13 +73,13 @@ def inversa():
         result = A.inv()
     except NonSquareMatrixError:
         print("ERROR: Given matrix not square, thus not invertible")
-        if input("Try again? [Y/n]").lower() == "y":
+        if input("Try again? [Y/n] ").lower() == "y":
             inversa()
         else:
             exit(1)
     except ValueError:
         print("ERROR: The determinant of the given matrix is 0, thus it cannot be inverted")
-        if input("Try again? [Y/n]").lower() == "y":
+        if input("Try again? [Y/n] ").lower() == "y":
             inversa()
         else:
             exit(1)
