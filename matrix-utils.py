@@ -54,6 +54,12 @@ def determinante():
             determinante()
         else:
             exit(1)
+    except  ValueError:
+        print('ERROR: Mismatched dimensions.')
+        if input("Try again? [Y/n]").lower() == "y":
+            determinante()
+        else:
+            exit(1)
     else:
         pprint(sympy.factor(nsimplify(result)))
 
