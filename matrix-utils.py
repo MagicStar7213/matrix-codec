@@ -1,5 +1,4 @@
-from sympy import NonSquareMatrixError, ShapeError, init_printing, pprint, nsimplify
-import sympy
+from sympy import NonSquareMatrixError, ShapeError, init_printing, pprint, nsimplify, factor
 from utils import matrix_is_zero, list_to_matrix
 
 
@@ -61,7 +60,7 @@ def determinante():
         else:
             exit(1)
     else:
-        pprint(sympy.factor(nsimplify(result)))
+        pprint(factor(nsimplify(result)))
 
 def inversa():
     print("INVERSA")
@@ -84,7 +83,7 @@ def inversa():
         else:
             exit(1)
     else:
-        pprint(sympy.factor(nsimplify(result)))
+        pprint(factor(nsimplify(result)))
 
 
 init_printing()
