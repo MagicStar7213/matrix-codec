@@ -22,6 +22,11 @@ which you would type as `1/-2/1//0/-3/4//2/1/-1`.
 
 The output is the result: `-11`
 
+### Rank
+To calculate the rank of any matrix, just enter it, for example: $`\begin{bmatrix} 1 & -2 & 1 & 3\\0 & -3 & 4 & 1\\2 & 1 & -1 & 0 \end{bmatrix}`$ in the program like so: `1/-2/1/3//0/-3/4/1//2/1/-1/0`.
+
+The program will then print the rank of the given matrix: `3`
+
 ### Adjugate (conjugate)
 To calculate de adjugate you type the matrix you want, for example this one: $`\begin{bmatrix} 1 & -2 & 1\\0 & -3 & 4\\2 & 1 & -1 \end{bmatrix}`$
 in the form: `1/-2/1//0/-3/4//2/1/-1`.

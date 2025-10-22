@@ -85,6 +85,23 @@ def inversa():
     else:
         pprint(factor(nsimplify(result)))
 
+def rango():
+    print("RANGO")
+    print("Los elementos de la matriz deben separarse por / y cada fila con //")
+    message:list[list[str]] = [m.split('/') for m in input("Introduce la matriz: ").split('//')] # Split string input into 2D array
+    A = list_to_matrix(message)
+    print("Resultado:")
+    try:
+        result = A.rank(iszerofunc=matrix_is_zero)
+    except  ValueError:
+        print('ERROR: Mismatched dimensions.')
+        if input("Try again? [Y/n] ").lower() == "y":
+            rango()
+        else:
+            exit(1)
+    else:
+        pprint(factor(nsimplify(result)))
+
 
 init_printing()
 print("""
@@ -96,7 +113,7 @@ print("""
                                     
     """)
 while True:
-    option = input("Elige una opción: Adjunta [a], Determinante [d], Producto [p], Inversa [i] o Salir [q]: ")
+    option = input("Elige una opción: Adjunta [a], Determinante [d], Producto [p], Inversa [i], Rango [r] o Salir [q]: ")
     if option == "d":
         try:
             determinante()
@@ -118,6 +135,12 @@ while True:
     elif option == "i":
         try:
             inversa()
+        except KeyboardInterrupt:
+            print()
+            continue
+    elif option == "r":
+        try:
+            rango()
         except KeyboardInterrupt:
             print()
             continue
