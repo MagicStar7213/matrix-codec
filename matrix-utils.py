@@ -19,7 +19,7 @@ def producto():
         else:
             exit(1)
     else:
-        pprint(result.applyfunc(nsimplify))
+        pprint(factor(nsimplify(result), deep=True))
         
 
 def adjunta():
@@ -37,7 +37,7 @@ def adjunta():
         else:
             exit(1)
     else:
-        pprint(result.applyfunc(nsimplify))
+        pprint(factor(nsimplify(result), deep=True))
 
 def determinante():
     print("DETERMINANTE")
@@ -60,7 +60,7 @@ def determinante():
         else:
             exit(1)
     else:
-        pprint(factor(nsimplify(result)))
+        pprint(factor(nsimplify(result), deep=True))
 
 def inversa():
     print("INVERSA")
@@ -83,7 +83,7 @@ def inversa():
         else:
             exit(1)
     else:
-        pprint(factor(nsimplify(result)))
+        pprint(factor(nsimplify(result), deep=True))
 
 def rango():
     print("RANGO")
@@ -100,7 +100,7 @@ def rango():
         else:
             exit(1)
     else:
-        pprint(factor(nsimplify(result)))
+        pprint(factor(nsimplify(result), deep=True))
 
 
 init_printing()
