@@ -1,4 +1,4 @@
-from sympy import Expr, NonSquareMatrixError, Number, ShapeError, init_printing, pprint, nsimplify, factor, solve
+from sympy import Expr, Matrix, NonSquareMatrixError, Number, ShapeError, init_printing, parse_expr, pprint, nsimplify, factor, solve
 from utils import matrix_is_zero, list_to_matrix
 
 
@@ -92,7 +92,7 @@ def rango():
     A = list_to_matrix(message)
     if A.is_symbolic():
         shape = A.shape
-        minors_list: list[Expr] = []
+        minors_list: list[Matrix] = []
         for row in range(shape[0]):
             for col in range(shape[1]):
                 rowlist = list(range(shape[0]))
@@ -104,34 +104,51 @@ def rango():
                 else:
                     rowlist.remove(row)
                     collist.remove(col)
-                minors_list.append(factor(nsimplify(A.extract(rowlist, collist).det())))
+                minors_list.append(A.extract(rowlist, collist))
         zero_values: list[Number] = []
         for minor in minors_list:
-            if not minor.is_number:
-                for root in solve(minor):
-                    if not root in zero_values:
+            if not minor.det().is_number:
+                for root in solve(minor.det()):
+                    sym = list(minor.free_symbols)[0]
+                    minors_affected = 1
+                    mins = minors_list.copy()
+                    mins.remove(minor)
+                    for m in mins:
+                       if m.subs(sym, root).det() == 0:
+                           minors_affected += 1
+                    if minors_affected == len(minors_list) and not root in zero_values:
                         zero_values.append(root)
         symbol = sorted(A.free_symbols)[0]
-        try:
-            print(f"Caso 1, si {str([f'{symbol} ≠ {x}' for x in zero_values]).removeprefix('[\'').removesuffix('\']')}: \n Rango de A = {A.rank()}")
-        except ValueError:
-            print('ERROR: Mismatched dimensions.')
-            if input("Try again? [Y/n] ").lower() == "y":
-                rango()
-            else:
-                exit(1)
-        caso = 2
-        for root in zero_values:
+        if len(zero_values) != 0:
             try:
-                print(f"Caso {caso} si {symbol} = {root}:")
-                print(f"Rango de A = {A.subs(symbol, root).rank(simplify=True)}")
+                print(f"Caso 1, si {str([f'{symbol} ≠ {x}' for x in zero_values]).removeprefix('[\'').removesuffix('\']')}: \n Rango de A = {A.rank()}")
             except ValueError:
                 print('ERROR: Mismatched dimensions.')
                 if input("Try again? [Y/n] ").lower() == "y":
                     rango()
                 else:
                     exit(1)
-            caso += 1
+            caso = 2
+            for root in zero_values:
+                try:
+                    print(f"Caso {caso} si {symbol} = {root}:")
+                    print(f" Rango de A = {A.subs(symbol, root).rank(simplify=True)}")
+                except ValueError:
+                    print('ERROR: Mismatched dimensions.')
+                    if input("Try again? [Y/n] ").lower() == "y":
+                        rango()
+                    else:
+                        exit(1)
+                caso += 1
+        else:
+            try:
+                print(f"El rango de A = {A.rank()}")
+            except ValueError:
+                print('ERROR: Mismatched dimensions.')
+                if input("Try again? [Y/n] ").lower() == "y":
+                    rango()
+                else:
+                    exit(1) 
     else:
         try:
             print(f"El rango de A = {A.rank(iszerofunc=matrix_is_zero)}")
