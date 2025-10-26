@@ -131,7 +131,7 @@ def rango():
                     rango()
                 else:
                     exit(1)
-        caso += 1
+            caso += 1
     else:
         try:
             print(f"El rango de A = {A.rank(iszerofunc=matrix_is_zero)}")
