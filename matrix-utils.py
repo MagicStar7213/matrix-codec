@@ -1,5 +1,5 @@
 from sympy import Expr, Matrix, NonSquareMatrixError, Number, ShapeError, init_printing, parse_expr, pprint, nsimplify, factor, solve
-from utils import matrix_is_zero, list_to_matrix
+from utils import matrix_is_zero, list_to_matrix, decompose_matrix
 
 
 def producto():
@@ -91,20 +91,16 @@ def rango():
     message:list[list[str]] = [m.split('/') for m in input("Introduce la matriz: ").split('//')] # Split string input into 2D array
     A = list_to_matrix(message)
     if A.is_symbolic():
-        shape = A.shape
-        minors_list: list[Matrix] = []
-        for row in range(shape[0]):
-            for col in range(shape[1]):
-                rowlist = list(range(shape[0]))
-                collist = list(range(shape[1]))
-                if shape[0] > shape[1]:
-                    rowlist.remove(row)
-                elif shape[1] > shape[0]:
-                    collist.remove(col)
-                else:
-                    rowlist.remove(row)
-                    collist.remove(col)
-                minors_list.append(A.extract(rowlist, collist))
+        minors_list: list[Matrix] = decompose_matrix([A])
+        all_square = False
+        while not all_square:
+            all_square = True
+            for minor in minors_list:
+                if minor.shape[0] != minor.shape[1]:
+                    all_square = False
+                    break
+            if not all_square:
+                minors_list = decompose_matrix(minors_list)
         zero_values: list[Number] = []
         for minor in minors_list:
             if not minor.det().is_number:

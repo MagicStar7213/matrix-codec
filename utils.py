@@ -32,3 +32,23 @@ def list_to_matrix(matrix: list[list[str]]) -> Matrix:
                 new_row.append(x)
         result.append(new_row)
     return Matrix(result)
+
+def decompose_matrix(matrix_list: list[Matrix]) -> list[Matrix]:
+    return_list: list[Matrix] = []
+    for A in matrix_list:
+        shape = A.shape
+        minors_list: list[Matrix] = []
+        for row in range(shape[0]):
+            for col in range(shape[1]):
+                rowlist = list(range(shape[0]))
+                collist = list(range(shape[1]))
+                if shape[0] > shape[1]:
+                    rowlist.remove(row)
+                elif shape[1] > shape[0]:
+                    collist.remove(col)
+                else:
+                    rowlist.remove(row)
+                    collist.remove(col)
+                minors_list.append(A.extract(rowlist, collist))
+        return_list.extend(minors_list)
+    return return_list
