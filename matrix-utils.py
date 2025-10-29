@@ -117,7 +117,9 @@ def rango():
         symbol = sorted(A.free_symbols)[0]
         if len(zero_values) != 0:
             try:
-                print(f"Caso 1, si {str([f'{symbol} ≠ {x}' for x in zero_values]).removeprefix('[\'').removesuffix('\']')}: \n Rango de A = {A.rank()}")
+                str1 = "[\'"
+                str2 = "\']"
+                print(f"Caso 1, si {str([f'{symbol} ≠ {x}' for x in zero_values]).removeprefix(str1).removesuffix(str2)}: \n Rango de A = {A.rank()}")
             except ValueError:
                 print('ERROR: Mismatched dimensions.')
                 if input("Try again? [Y/n] ").lower() == "y":
