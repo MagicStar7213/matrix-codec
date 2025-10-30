@@ -49,6 +49,8 @@ def decompose_matrix(matrix_list: list[Matrix]) -> list[Matrix]:
                 else:
                     rowlist.remove(row)
                     collist.remove(col)
-                minors_list.append(A.extract(rowlist, collist))
+                minor = A.extract(rowlist, collist)
+                if minor not in minors_list:
+                    minors_list.append(minor)
         return_list.extend(minors_list)
     return return_list
