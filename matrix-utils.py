@@ -1,4 +1,5 @@
 from sympy import Expr, Matrix, NonSquareMatrixError, Number, ShapeError, init_printing, parse_expr, pprint, nsimplify, factor, solve
+from determinants import del_proportional_lines, del_zero_lines
 from utils import matrix_is_zero, list_to_matrix, decompose_matrix
 
 
@@ -89,7 +90,7 @@ def rango():
     print("RANGO")
     print("Los elementos de la matriz deben separarse por / y cada fila con //")
     message:list[list[str]] = [m.split('/') for m in input("Introduce la matriz: ").split('//')] # Split string input into 2D array
-    A = list_to_matrix(message)
+    A = del_proportional_lines(del_zero_lines(list_to_matrix(message)))
     if A.is_symbolic():
         if A.shape[0] != A.shape[1]:
             minors_list: list[Matrix] = decompose_matrix([A])
@@ -106,7 +107,8 @@ def rango():
                 if not all_square:
                     minors_list = decompose_matrix(minors_list)
             zero_values: list[Number] = []
-            for minor in minors_list:
+            for raw_minor in minors_list:
+                minor = del_proportional_lines(del_zero_lines(raw_minor))
                 if not minor.det().is_number:
                     for root in solve(minor.det()):
                         sym = list(minor.free_symbols)[0]
