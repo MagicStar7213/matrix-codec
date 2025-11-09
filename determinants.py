@@ -1,4 +1,4 @@
-from sympy import Matrix, Expr, LessThan, Rational, nan, gcd, parse_expr
+from sympy import Matrix, Expr, LessThan, Rational, factor, nan, gcd, prod
 
 
 def del_zero_lines(matrix: Matrix) -> Matrix:
@@ -44,20 +44,19 @@ def del_proportional_lines(matrix: Matrix) -> Matrix:
         new_matrix.col_del(c)
     return new_matrix
 
-def extract_common_factor(matrix: Matrix) -> list[Expr|Matrix]:
+def extract_common_factor(matrix: Matrix) -> tuple[Expr,Matrix]:
     new_matrix = matrix.copy()
     common_factors: list[Expr|Matrix] = []
     for row in range(matrix.shape[0]):
-        mcd = parse_expr(gcd(matrix.row(row)))
+        mcd = gcd([x for x in new_matrix.row(row)])
         if mcd != 1:
             common_factors.append(mcd)
             for col in range(matrix.shape[1]):
                 new_matrix[row,col] /= mcd
     for col in range(matrix.shape[1]):
-        mcd = parse_expr(gcd(matrix.col(col)))
+        mcd = gcd([x for x in new_matrix.col(col)])
         if mcd != 1:
             common_factors.append(mcd)
             for row in range(matrix.shape[0]):
                 new_matrix[row,col] /= mcd
-    common_factors.append(new_matrix)
-    return common_factors
+    return (factor(prod(common_factors)), new_matrix)
