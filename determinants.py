@@ -44,7 +44,7 @@ def del_proportional_lines(matrix: Matrix) -> Matrix:
         new_matrix.col_del(c)
     return new_matrix
 
-def extract_common_factor(matrix: Matrix) -> tuple[Expr,Matrix]:
+def extract_common_factor(matrix: Matrix) -> tuple[Expr,Matrix] | Matrix:
     new_matrix = matrix.copy()
     common_factors: list[Expr|Matrix] = []
     for row in range(matrix.shape[0]):
@@ -59,4 +59,4 @@ def extract_common_factor(matrix: Matrix) -> tuple[Expr,Matrix]:
             common_factors.append(mcd)
             for row in range(matrix.shape[0]):
                 new_matrix[row,col] /= mcd
-    return (factor(prod(common_factors)), new_matrix)
+    return (factor(prod(common_factors)), new_matrix) if common_factors else matrix
