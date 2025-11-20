@@ -109,14 +109,14 @@ def rango():
             zero_values: list[Number] = []
             for raw_minor in minors_list:
                 minor = del_proportional_lines(del_zero_lines(raw_minor))
-                if not minor.det().is_number:
+                if not Expr(minor.det()).is_number:
                     for root in solve(minor.det()):
                         sym = list(minor.free_symbols)[0]
                         minors_affected = 1
                         mins = minors_list.copy()
                         mins.remove(minor)
                         for m in mins:
-                            if m.subs(sym, root).det() == 0:
+                            if Matrix(m.subs(sym, root)).det() == 0:
                                 minors_affected += 1
                         if minors_affected == len(minors_list) and not root in zero_values:
                             zero_values.append(root)
@@ -136,7 +136,7 @@ def rango():
                 for root in zero_values:
                     try:
                         print(f"Caso {caso} si {symbol} = {root}:")
-                        print(f" Rango de A = {A.subs(symbol, root).rank(simplify=True)}")
+                        print(f" Rango de A = {Matrix(A.subs(symbol, root)).rank(simplify=True)}")
                     except ValueError:
                         print('ERROR: Mismatched dimensions.')
                         if input("Try again? [Y/n] ").lower() == "y":
