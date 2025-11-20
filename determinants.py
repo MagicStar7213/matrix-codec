@@ -1,4 +1,4 @@
-from sympy import Matrix, Expr, LessThan, Rational, factor, nan, gcd, prod
+from sympy import Matrix, Expr, LessThan, Mul, Pow, Rational, factor, nan, gcd, prod
 
 
 def del_zero_lines(matrix: Matrix) -> Matrix:
@@ -20,7 +20,14 @@ def del_proportional_lines(matrix: Matrix) -> Matrix:
                 if row == row1:
                     pass
                 else:
-                    k = [Rational(matrix[row,col], matrix[row1,col]) for col in range(matrix.shape[1])]
+                    k:list[Expr] = []
+                    for col in range(matrix.shape[1]):
+                        if Expr(matrix[row,col]).is_number and Expr(matrix[row1,col]).is_number:
+                            k.append(Rational(matrix[row,col], matrix[row1,col]))
+                        elif Expr(matrix[row,col]).is_number:
+                            k.append(Mul(matrix[row,col],Pow(matrix[row1,col],-1)))
+                        elif Expr(matrix[row1,col]).is_number:
+                            k.append(Mul(Rational(1,matrix[row1,col]),matrix[row,col]))
                     if k.count(nan) != len(k) and k.count(k[0]) == len(k) and row1 not in del_rows:
                         del_rows.append(row1 if LessThan(matrix[row,0], matrix[row1,0]) else row)
     del_rows.reverse()
@@ -29,13 +36,19 @@ def del_proportional_lines(matrix: Matrix) -> Matrix:
         new_matrix.row_del(r)
     del_cols:list[int] = []
     for col in range(matrix.shape[1]):
-
         if col not in del_cols:
             for col1 in range(matrix.shape[1]):
                 if col == col1:
                     pass
                 else:
-                    k = [Rational(matrix[row,col], matrix[row,col1]) for row in range(matrix.shape[0])]
+                    k:list[Expr] = []
+                    for row in range(matrix.shape[0]):
+                        if Expr(matrix[row,col]).is_number and Expr(matrix[row,col1]).is_number:
+                            k.append(Rational(matrix[row,col], matrix[row,col1]))
+                        elif Expr(matrix[row,col]).is_number:
+                            k.append(Mul(matrix[row,col],Pow(matrix[row,col1],-1)))
+                        elif Expr(matrix[row,col1]).is_number:
+                            k.append(Mul(Rational(1,matrix[row,col1]),matrix[row,col]))
                     if k.count(nan) != len(k) and k.count(k[0]) == len(k) and col1 not in del_cols:
                         del_cols.append(col1 if LessThan(matrix[0,col], matrix[0,col1]) else col)
     del_cols.reverse()
