@@ -121,7 +121,7 @@ def rango():
                         if minors_affected == len(minors_list) and not root in zero_values:
                             zero_values.append(root)
             symbol = sorted(A.free_symbols)[0]
-            if len(zero_values) != 0:
+            if zero_values:
                 try:
                     str1 = "[\'"
                     str2 = "\']"
