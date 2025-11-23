@@ -20,18 +20,7 @@ def list_is_ints(lst: list[str]) -> bool:
     return True
 
 def list_to_matrix(matrix: list[list[str]]) -> Matrix:
-    result = []
-    for row in matrix:
-        new_row = []
-        for x in row:
-            try:
-                x = int(x) if float(x).is_integer() else float(x)
-            except ValueError:
-                x = parse_expr(x, transformations='all')
-            finally:
-                new_row.append(x)
-        result.append(new_row)
-    return Matrix(result)
+    return Matrix([[parse_expr(x, transformations='all') for x in row] for row in matrix])
 
 def decompose_matrix(matrix_list: list[Matrix]) -> list[Matrix]:
     return_list: list[Matrix] = []
