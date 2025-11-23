@@ -8,17 +8,6 @@ def matrix_is_zero(x):
         warnings.warn(f"Zero testing of {x} evaluated into None")
     return result
 
-def list_is_ints(lst: list[str]) -> bool:
-    for x in lst:
-        try:
-            float(x)
-        except ValueError:
-            return False
-        else:
-            if not float(x).is_integer():
-                return False
-    return True
-
 def list_to_matrix(matrix: list[list[str]]) -> Matrix:
     return Matrix([[parse_expr(x, transformations='all') for x in row] for row in matrix])
 
