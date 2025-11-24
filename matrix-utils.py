@@ -18,7 +18,6 @@ def rank_per_symbol(A: Matrix, minors_list: list[Matrix], symbol: Symbol, symbol
                         minors_affected += 1
                 if minors_affected == len(minors_list) and root not in zero_values:
                     zero_values.append(root)
-    zero_values = [root for root in zero_values if Matrix(A.subs(symbol, root)).rank() == A.rank()]
     if zero_values:
         str1 = "[\'"
         str2 = "\']"
