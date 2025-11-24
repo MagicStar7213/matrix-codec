@@ -1,30 +1,31 @@
-from sympy import Expr, Matrix, NonSquareMatrixError, Number, ShapeError, Symbol, init_printing, ordered, pprint, nsimplify, factor, solve
+from sympy import Expr, Matrix, NonSquareMatrixError, ShapeError, Symbol, init_printing, ordered, pprint, nsimplify, factor, solve
 from determinants import del_proportional_lines, del_zero_lines
 from utils import matrix_is_zero, list_to_matrix, decompose_matrix
 
 
-def rank_per_symbol(A: Matrix, minors_list: list[Matrix], symbol: tuple[Symbol, (Expr | None)], symbols: list[Symbol], indents: int = 0):
+def rank_per_symbol(A: Matrix, minors_list: list[Matrix], symbol: Symbol, symbols: list[Symbol], indents: int = 0):
     indentation = "".join(["  " for _ in range(indents)])
-    zero_values: list[Number] = []
+    zero_values: list[Expr] = []
     for raw_minor in minors_list:
         minor = del_proportional_lines(del_zero_lines(raw_minor))
-        if not Expr(minor.det()).is_number and symbol[0] in Expr(minor.det()).free_symbols:
-            for root in solve(minor.det(), symbol[0]):
+        if not Expr(minor.det()).is_number and symbol in Expr(minor.det()).free_symbols:
+            for root in solve(minor.det(), symbol):
                 minors_affected = 1
                 mins = minors_list.copy()
                 mins.remove(minor)
                 for m in mins:
-                    if Matrix(m.subs(symbol[0], root)).det() == 0 or not Expr(Matrix(m.subs(symbol[0], root)).det()).is_number:
+                    if Matrix(m.subs(symbol, root)).det() == 0 or not Expr(Matrix(m.subs(symbol, root)).det()).is_number:
                         minors_affected += 1
-                if minors_affected == len(minors_list) and not root in zero_values:
+                if minors_affected == len(minors_list) and root not in zero_values:
                     zero_values.append(root)
+    zero_values = [root for root in zero_values if Matrix(A.subs(symbol, root)).rank() == A.rank()]
     if zero_values:
         str1 = "[\'"
         str2 = "\']"
-        print(f"{indentation}Caso 1, si {str([f'{symbol[0]} ≠ {x}' for x in zero_values]).removeprefix(str1).removesuffix(str2)}:")
-        syms_new = [x for x in symbols if x != symbol[0]]
+        print(f"{indentation}Caso 1, si {str([f'{symbol} ≠ {x}' for x in zero_values]).removeprefix(str1).removesuffix(str2)}:")
+        syms_new = [x for x in symbols if x != symbol]
         if syms_new:
-            rank_per_symbol(A,minors_list, (syms_new[0], None), syms_new, indents+1)
+            rank_per_symbol(A,minors_list, syms_new[0], syms_new, indents+1)
         else:
             try:
                 print(f"{indentation}  El rango de A = {A.rank()}")
@@ -36,11 +37,11 @@ def rank_per_symbol(A: Matrix, minors_list: list[Matrix], symbol: tuple[Symbol, 
                     exit(1)
         caso = 2
         for root in zero_values:
-            print(f"{indentation}Caso {caso} si {symbol[0]} = {root}:")
-            B = Matrix(A.subs(symbol[0], root))
-            syms_new: list[Symbol] = [x for x in symbols if x != symbol[0]]
+            print(f"{indentation}Caso {caso} si {symbol} = {root}:")
+            B = Matrix(A.subs(symbol, root))
+            syms_new: list[Symbol] = [x for x in symbols if x != symbol]
             if syms_new:
-                rank_per_symbol(B,[minor.subs(symbol[0], root) for minor in minors_list], (syms_new[0], root), syms_new, indents+1)
+                rank_per_symbol(B,[minor.subs(symbol, root) for minor in minors_list], syms_new[0], syms_new, indents+1)
             else:
                 try:
                     print(f"  {indentation}El rango de A = {B.rank()}")
@@ -51,7 +52,15 @@ def rank_per_symbol(A: Matrix, minors_list: list[Matrix], symbol: tuple[Symbol, 
                     else:
                         exit(1)
             caso += 1
-    
+    else:
+        try:
+            print(f"{indentation}  El rango de A = {A.rank()}")
+        except ValueError:
+            print('ERROR: Mismatched dimensions.')
+            if input("Try again? [Y/n] ").lower() == "y":
+                rango()
+            else:
+                exit(1)
 
 def producto():
     print("PRODUCTO")
@@ -160,7 +169,7 @@ def rango():
         else:
             minors_list = [A]
         symbols: list[Symbol] = list(ordered(A.free_symbols))
-        rank_per_symbol(A, minors_list, (symbols[0],None), symbols)
+        rank_per_symbol(A, minors_list, symbols[0], symbols)
     else:
         try:
             print(f"El rango de A = {A.rank(iszerofunc=matrix_is_zero)}")
