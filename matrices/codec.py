@@ -1,5 +1,5 @@
 from sympy import NonSquareMatrixError, init_printing, Matrix, nsimplify, pprint
-from utils import list_to_matrix
+from .utils import list_to_matrix
 
 
 def encode(encode_matrix):
@@ -121,7 +121,7 @@ class Main:
                         break
             elif option == "q":
                 print("Exiting...")
-                exit(0)
+                return
 
 
 if __name__ == "__main__":
