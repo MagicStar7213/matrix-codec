@@ -1,7 +1,4 @@
-if __name__ == '__main__':
-    from vectors import scalar, vectorial, mix
-else:
-    from .vectors import scalar, vectorial, mix
+from .vectors import scalar, vectorial, mix
 
 
 def vectors():
