@@ -51,7 +51,7 @@ def matrices():
                     continue
             case "q":
                 print("Saliendo...")
-                exit(0)
+                return
             case "c":
                 try:
                     Main().app()
