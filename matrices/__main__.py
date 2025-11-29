@@ -14,45 +14,46 @@ print("""
     """)
 while True:
     option = input("Elige una opción: Adjunta [a], Codificador/decodificador [c], Determinante [d], Inversa [i], Producto [p], Rango [r] o Salir [q]: ")
-    if option == "d":
-        try:
-            determinante()
-        except KeyboardInterrupt:
-            print()
+    match option:
+        case "d":
+            try:
+                determinante()
+            except KeyboardInterrupt:
+                print()
+                continue
+        case "a":
+            try:
+                adjunta()
+            except KeyboardInterrupt:
+                print()
+                continue
+        case "p":
+            try:
+                producto()
+            except KeyboardInterrupt:
+                print()
+                continue
+        case "i":
+            try:
+                inversa()
+            except KeyboardInterrupt:
+                print()
+                continue
+        case "r":
+            try:
+                rango()
+            except KeyboardInterrupt:
+                print()
+                continue
+        case "q":
+            print("Saliendo...")
+            exit(0)
+        case "c":
+            try:
+                Main().app()
+            except KeyboardInterrupt:
+                print()
+                continue
+        case _:
+            print('ERROR: No existe esa opción.')
             continue
-    elif option == "a":
-        try:
-            adjunta()
-        except KeyboardInterrupt:
-            print()
-            continue
-    elif option == "p":
-        try:
-            producto()
-        except KeyboardInterrupt:
-            print()
-            continue
-    elif option == "i":
-        try:
-            inversa()
-        except KeyboardInterrupt:
-            print()
-            continue
-    elif option == "r":
-        try:
-            rango()
-        except KeyboardInterrupt:
-            print()
-            continue
-    elif option == "q":
-        print("Saliendo...")
-        exit(0)
-    elif option == "c":
-        try:
-            Main().app()
-        except KeyboardInterrupt:
-            print()
-            continue
-    else:
-        print('ERROR: No existe esa opción.')
-        continue
