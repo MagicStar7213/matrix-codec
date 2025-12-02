@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools >= 77.0.3"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "math-utils"
+dynamic = ["version"]
+description = "A CLI tool for using math operations"
+readme = "README.md"
+license = "GPL-3.0-or-later"
+license-files = ["LICENSE*"]
+keywords = ["math", "matrix", "matrices", "vectors"]
+dependencies = ["sympy"]
+requires-python = ">=3.9"
+authors = [{name = "Breixo Montenegro", email = "saltaestrellas@hotmail.com"}]
+maintainers = [{name = "Breixo Montenegro", email = "saltaestrellas@hotmail.com"}]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Natural Language :: Spanish",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.9",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Typing :: Typed"
+]
+
+[project.urls]
+Homepage = "https://github.com/MagicStar7213/matrix-codec"
+Repository = "https://github.com/MagicStar7213/matrix-codec.git"
+"Bug Tracker" = "https://github.com/MagicStar7213/matrix-codec"
+
+[project.scripts]
+math-utils = "__main__:main"
