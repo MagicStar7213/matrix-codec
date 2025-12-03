@@ -36,3 +36,6 @@ Repository = "https://github.com/MagicStar7213/matrix-codec.git"
 
 [project.scripts]
 math-utils = "__main__:main"
+
+[tool.setuptools]
+packages = ["matrices", "geometry"]
