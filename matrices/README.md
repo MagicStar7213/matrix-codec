@@ -1,6 +1,6 @@
 # Matrices
 
-Matrix Utils is a set of Python scripts that allows you to calculate the product of two matrices, the adjugate/conjugate matrix, the determinant and encode a message using matrices.
+Matrix utils allow you to calculate the product of two matrices, the adjugate/conjugate matrix, the determinant and encode a message using matrices.
 
 ## Usage
 The encoding function only allows uppercase letters and spaces for now.
