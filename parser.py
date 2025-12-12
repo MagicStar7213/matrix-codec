@@ -1,4 +1,4 @@
-def parse(raw: str) -> list[str | list]:
+def str_to_list(raw: str) -> list[str | list]:
     stack: list[list[str | list]] = [[]]
     current = stack[-1]
 
