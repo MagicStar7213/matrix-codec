@@ -1,4 +1,4 @@
-from geometry.vectors import convert_to_vectors
+from .vectors import convert_to_vectors
 
 
 def vectors():
