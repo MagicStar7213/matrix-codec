@@ -1,5 +1,5 @@
 from sympy.vector import CoordSys3D, VectorAdd
-from parser import construct_string
+from parser import construct_string, are_elements_numbers
 
 
 def str_to_list(raw: str) -> list[str | list]:
