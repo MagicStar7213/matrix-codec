@@ -1,7 +1,4 @@
-if __name__ == '__main__':
-    from vectors import scalar, vectorial, mix
-else:
-    from .vectors import scalar, vectorial, mix
+from geometry.vectors import convert_to_vectors
 
 
 def vectors():
@@ -9,15 +6,11 @@ def vectors():
      _   _ _|_  _  ._  _ 
  \\/ (/_ (_  |  (_) |  _\\ """)
     while True:
-        option = input("Elige una opción: Producto escalar [s], Producto vectorial [v], Producto mixto [m] o Salir [q]: ")
-        match option:
-            case "s": scalar()
-            case "v": vectorial()
-            case "m": mix()
-            case "q": return
-            case _:
-                print('Error! Opción no disponible. Vuelve a intentarlo.')
-                continue
+        raw = input('>> ')
+        if raw == 'q':
+            return
+        elif convert_to_vectors(raw) is not None:
+            print(convert_to_vectors(raw))
 
 def main():
     print("""

@@ -38,6 +38,12 @@ def parse_vectors(lst: list[str | list]) -> list[str | list]:
                 case '^': parsed[lst.index(element)] = '.cross'
     return parsed
 
-def convert_to_vectors(raw: str) -> VectorAdd:
+def convert_to_vectors(raw: str) -> VectorAdd | None:
     C = CoordSys3D('C')
-    return eval(construct_string(parse_vectors(str_to_list(raw))))
+    try:
+        parsed = eval(construct_string(parse_vectors(str_to_list(raw))))
+    except (SyntaxError, TypeError, ValueError):
+        print('An error just occurred! Please check the input for mistakes and try again.')
+        return None
+    else:
+        return parsed
