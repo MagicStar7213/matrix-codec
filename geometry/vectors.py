@@ -1,5 +1,4 @@
 from sympy.vector import CoordSys3D, VectorAdd
-
 from parser import construct_string
 
 
