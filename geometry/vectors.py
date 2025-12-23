@@ -1,25 +1,44 @@
-from sympy import Matrix, parse_expr, pretty
-from sympy.vector import CoordSys3D, Vector, matrix_to_vector
+from sympy.vector import CoordSys3D, VectorAdd
 
-def scalar():
-    print('PRODUCTO ESCALAR')
-    C = CoordSys3D('C')
-    u: Vector = matrix_to_vector(Matrix([parse_expr(x, transformations='all') for x in input('Introduce el primer vector: ').split(',')]),C)
-    v: Vector = matrix_to_vector(Matrix([parse_expr(x, transformations='all') for x in input('Introduce el segundo vector: ').split(',')]), C)
-    print(f'u\u2192 · v\u2192 = {pretty(u.dot(v))}')
+from parser import construct_string
 
-def vectorial():
-    print('PRODUCTO VECTORIAL')
-    C = CoordSys3D('C')
-    u: Vector = matrix_to_vector(Matrix([parse_expr(x, transformations='all') for x in input('Introduce el primer vector: ').split(',')]),C)
-    v: Vector = matrix_to_vector(Matrix([parse_expr(x, transformations='all') for x in input('Introduce el segundo vector: ').split(',')]), C)
-    u_v = u.cross(v).to_matrix(C)
-    print(f'u\u2192 \u2227 v\u2192 = ({u_v[0]}, {u_v[1]}, {u_v[2]})')
 
-def mix():
-    print('PRODUCTO MIXTO')
+def str_to_list(raw: str) -> list[str | list]:
+    stack: list[list[str | list]] = [[]]
+    current = stack[-1]
+
+    for char in raw:
+        if char == '(':
+            new_list: list[str] = []
+            current.append(new_list)
+            stack.append(new_list)
+            current = new_list
+
+        elif char == ')':
+            stack.pop()
+            current = stack[-1]
+        else:
+            if char.isdigit() and current and current[-1] == '-':
+                current[-1] = f'-{char}'
+            elif char == ',': pass
+            else:
+                current.append(char)
+    return stack[0]
+
+def parse_vectors(lst: list[str | list]) -> list[str | list]:
+    parsed = lst.copy()
+    for element in lst:
+        if type(element) is list:
+            if all(isinstance(x,str) for x in element) and len(element) == 3 and are_elements_numbers(element):
+                parsed[lst.index(element)] = f'({element[0]}*C.i+{element[1]}*C.j+{element[2]}*C.k)'.replace('+-','-')
+            else:
+                parsed[lst.index(element)] = parse_vectors(element)
+        else:
+            match element:
+                case '·': parsed[lst.index(element)] = '.dot'
+                case '^': parsed[lst.index(element)] = '.cross'
+    return parsed
+
+def convert_to_vectors(raw: str) -> VectorAdd:
     C = CoordSys3D('C')
-    u: Vector = matrix_to_vector(Matrix([parse_expr(x, transformations='all') for x in input('Introduce el primer vector: ').split(',')]),C)
-    v: Vector = matrix_to_vector(Matrix([parse_expr(x, transformations='all') for x in input('Introduce el segundo vector: ').split(',')]), C)
-    w: Vector = matrix_to_vector(Matrix([parse_expr(x, transformations='all') for x in input('Introduce el tercer vector: ').split(',')]),C)
-    print(f'[u\u2192, v\u2192, w\u2192] = {pretty(u.dot(v.cross(w)))}')
+    return eval(construct_string(parse_vectors(str_to_list(raw))))
