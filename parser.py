@@ -1,4 +1,4 @@
-from sympy.vector import CoordSys3D
+from sympy.vector import CoordSys3D, VectorAdd
 
 
 def str_to_list(raw: str) -> list[str | list]:
@@ -48,7 +48,6 @@ def are_elements_numbers(l: list[str]) -> bool:
 def construct_string(l: list[str | list]) -> str:
     return ''.join([construct_string(x) if type(x) is list else x for x in l])
 
-def parse_to_vectors(raw: str):
+def convert_to_vectors(raw: str) -> VectorAdd:
     C = CoordSys3D('C')
-    parsed = construct_string(parse_vectors(str_to_list(raw)))
-    print(parsed)
+    return eval(construct_string(parse_vectors(str_to_list(raw))))
