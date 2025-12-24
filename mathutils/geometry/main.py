@@ -1,5 +1,5 @@
-from .vectors import convert_to_vectors
-
+from sympy.vector import CoordSys3D, VectorAdd
+from .vectors import process_vectors
 
 
 def vectors():
@@ -10,8 +10,14 @@ def vectors():
         raw = input('>> ')
         if raw == 'q':
             return
-        elif convert_to_vectors(raw) is not None:
-            print(convert_to_vectors(raw))
+        else:
+            C = CoordSys3D('C')
+            result = process_vectors(raw, C)
+            if result is not None:
+                if type(result) is VectorAdd:
+                    print(f'({result.components[C.i]},{result.components[C.j]},{result.components[C.k]})')
+                else:
+                    print(result)
 
 def main():
     print("""

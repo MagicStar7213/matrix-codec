@@ -38,12 +38,19 @@ def parse_vectors(lst: list[str | list]) -> list[str | list]:
                 case '^': parsed[lst.index(element)] = '.cross'
     return parsed
 
-def convert_to_vectors(raw: str) -> VectorAdd | None:
-    C = CoordSys3D('C')
+def process_vectors(raw: str, C: CoordSys3D) -> VectorAdd | None:
     try:
         parsed = eval(construct_string(parse_vectors(str_to_list(raw))))
-    except (SyntaxError, TypeError, ValueError):
-        print('An error just occurred! Please check the input for mistakes and try again.')
+    except SyntaxError as e:
+        print('Input not understood! Look for any formatting or other mistakes and try again.')
+        msg_list=list(e.text)
+        msg_list.insert(e.offset-1,' ')
+        msg_list.insert(e.end_offset+1, ' ')
+        print(f'The error was here: {"".join(msg_list)}')
+        return None
+    except TypeError:
+        print('Types mismatched! It seems like you are trying to operate a number with a vector in an incompatible way')
+        print('Make sure you are doing the correct operations and try again.')
         return None
     else:
         return parsed
