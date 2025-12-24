@@ -1,4 +1,5 @@
 def are_elements_numbers(l: list[str]) -> bool:
+
     for x in l:
         try:
             float(x)
