@@ -56,14 +56,13 @@ def process_vectors(raw: str, C: CoordSys3D, env: dict) -> tuple[VectorAdd | Exp
         msg_list.insert(e.end_offset+1, ' ')
         print(f'The error was here: {"".join(msg_list)}')
         return None, env
-    except TypeError:
-        print('Types mismatched! It seems like you are trying to operate a number with a vector in an incompatible way')
-        print('Make sure you are doing the correct operations and try again.')
+    except TypeError as e:
+        print(f'Type error: {e}')
         return None, env
     except ValueError as e:
-        print(e)
+        print(f'Value error: {e}')
         return None, env
     except NameError as e:
-        print(e)
+        print(f'Name error: {e}')
     else:
         return parsed, env
