@@ -114,7 +114,7 @@ def safe_eval(code: str, env=None):
     try:
         ast.parse(code, mode='eval')
     except SyntaxError:
-        exec(code, globals=evaluator.env['vars'])
+        exec(code, evaluator.env['vars'])
         return None, evaluator.env
     else:
-        return eval(code, globals=evaluator.env['vars']), evaluator.env
+        return eval(code, evaluator.env['vars']), evaluator.env
