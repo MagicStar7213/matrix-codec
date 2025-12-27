@@ -1,5 +1,7 @@
+from sympy import Expr
 from sympy.vector import CoordSys3D, VectorAdd
-from mathutils.parser import construct_string, are_elements_numbers
+
+from mathutils.parser import construct_string, are_elements_numbers, safe_eval
 
 
 def str_to_list(raw: str) -> list[str | list]:
@@ -38,9 +40,11 @@ def parse_vectors(lst: list[str | list]) -> list[str | list]:
                 case '^': parsed[lst.index(element)] = '.cross'
     return parsed
 
-def process_vectors(raw: str, C: CoordSys3D) -> VectorAdd | None:
+def process_vectors(raw: str, C: CoordSys3D) -> VectorAdd | Expr | None:
     try:
-        parsed = eval(construct_string(parse_vectors(str_to_list(raw))))
+        parsed = safe_eval(construct_string(parse_vectors(str_to_list(raw))), { 'class': VectorAdd,
+            'whitelist': {"dot": VectorAdd.dot, "cross": VectorAdd.cross},
+            'vars': {'C': C}, 'attrs': ['i', 'j', 'k']})
     except SyntaxError as e:
         print('Input not understood! Look for any formatting or other mistakes and try again.')
         msg_list=list(e.text)
@@ -48,9 +52,15 @@ def process_vectors(raw: str, C: CoordSys3D) -> VectorAdd | None:
         msg_list.insert(e.end_offset+1, ' ')
         print(f'The error was here: {"".join(msg_list)}')
         return None
-    except TypeError:
+    except TypeError as e:
         print('Types mismatched! It seems like you are trying to operate a number with a vector in an incompatible way')
         print('Make sure you are doing the correct operations and try again.')
+        raise e
+        return None
+    except ValueError as e:
+        print(e)
+        import traceback
+        traceback.print_tb(e.__traceback__)
         return None
     else:
         return parsed

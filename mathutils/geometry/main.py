@@ -15,7 +15,7 @@ def vectors():
             result = process_vectors(raw, C)
             if result is not None:
                 if type(result) is VectorAdd:
-                    print(f'({result.components[C.i]},{result.components[C.j]},{result.components[C.k]})')
+                    print(f'({result.components[C.i] if C.i in result.components.keys() else 0},{result.components[C.j] if C.j in result.components.keys() else 0},{result.components[C.k] if C.k in result.components.keys() else 0})')
                 else:
                     print(result)
 
