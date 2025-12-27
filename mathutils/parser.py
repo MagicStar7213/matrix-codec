@@ -12,7 +12,8 @@ def are_elements_numbers(l: list[str]) -> bool:
     return True
 
 def construct_string(l: list[str | list]) -> str:
-    return '('+''.join([construct_string(x) if type(x) is list else x for x in l])+')'
+    return '('+''.join([construct_string(x) if type(x) is list else x for x in l])+')' if not '=' in l \
+        else ''.join([construct_string(x) if type(x) is list else x for x in l])
 
 
 
@@ -20,7 +21,7 @@ class SafeEval(ast.NodeVisitor):
     def __init__(self, env: dict):
         self.env = env
         self.OPS = {
-            ast.Add: ast.Add,
+            ast.Add: operator.add,
             ast.Sub: operator.sub,
             ast.Mult: operator.mul,
             ast.Div: operator.truediv,
@@ -52,7 +53,7 @@ class SafeEval(ast.NodeVisitor):
         return node.value
 
     def visit_Name(self, node):
-        if node.id not in self.env['whitelist'] or self.env['vars']:
+        if node.id not in self.env['whitelist'] and node.id not in self.env['vars']:
             raise NameError(f"Undefined variable '{node.id}'")
         return self.env['whitelist'][node.id] if node.id in self.env['whitelist'] else self.env['vars'][node.id]
 
@@ -62,7 +63,7 @@ class SafeEval(ast.NodeVisitor):
         if node.value.id not in self.env['vars']:
             raise ValueError(f'Class {node.value.id} cannot be called')
         if 'attrs' in self.env.keys() and node.attr in self.env['attrs']:
-            return node
+            return getattr(self.env['vars'][node.value.id], node.attr)
         else:
             raise ValueError(f'Attribute {node.attr} cannot be called')
 
@@ -74,17 +75,23 @@ class SafeEval(ast.NodeVisitor):
     def visit_BinOp(self, node):
         if type(node.op) not in self.OPS.keys():
             raise ValueError("Operation not allowed")
-        return node
+        return self.OPS[type(node.op)](self.visit(node.left), self.visit(node.right))
 
     def visit_Call(self, node):
         if isinstance(node.func, ast.Attribute):
             method = node.func.attr
             if method not in self.env['whitelist']:
                 raise ValueError(f"Method {method} not allowed")
-            if not isinstance(self.visit(node.func.value), self.env['class']):
+            if method in self.env['whitelist'] and isinstance(self.visit(node.func.value), self.env['class']):
+                args = [self.visit(arg) for arg in node.args]
+                if type(node.func.value) is ast.Name and node.func.value.id in self.env['vars']:
+                    return getattr(self.env['vars'][node.func.value.id], method)(*args)
+                else:
+                    return getattr(self.visit(node.func.value), method)(*args)
+
+            else:
                 raise ValueError(f'{method} cannot be called from {type(self.visit(node.func.value)).__name__}')
-            args = [self.visit(arg) for arg in node.args]
-            return self.env['whitelist'][method](*args)
+
         elif isinstance(node.func, ast.Name):
             func_name = node.func.id
             if func_name not in self.ALLOWED_FUNCTIONS:
@@ -102,10 +109,12 @@ def safe_eval(code: str, env=None):
     if env is None:
         env = {}
     tree = ast.parse(code)
-    SafeEval(env).visit(tree)
+    evaluator = SafeEval(env)
+    evaluator.visit(tree)
     try:
         ast.parse(code, mode='eval')
     except SyntaxError:
-        exec(code, globals=env['vars'])
+        exec(code, globals=evaluator.env['vars'])
+        return None, evaluator.env
     else:
-        return eval(code, globals=env['vars'])
+        return eval(code, globals=evaluator.env['vars']), evaluator.env

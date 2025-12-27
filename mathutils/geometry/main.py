@@ -1,8 +1,12 @@
-from sympy.vector import CoordSys3D, VectorAdd
+from sympy.vector import CoordSys3D, BaseVector, VectorAdd, VectorMul
 from .vectors import process_vectors
 
 
 def vectors():
+    C = CoordSys3D('C')
+    env = { 'class': VectorAdd,
+            'whitelist': ['dot', 'cross'],
+            'vars': {'C': C}, 'attrs': ['i', 'j', 'k']}
     print("""
      _   _ _|_  _  ._  _ 
  \\/ (/_ (_  |  (_) |  _\\ """)
@@ -11,10 +15,9 @@ def vectors():
         if raw == 'q':
             return
         else:
-            C = CoordSys3D('C')
-            result = process_vectors(raw, C)
+            result, env = process_vectors(raw, C, env)
             if result is not None:
-                if type(result) is VectorAdd:
+                if type(result) in [BaseVector, VectorAdd, VectorMul]:
                     print(f'({result.components[C.i] if C.i in result.components.keys() else 0},{result.components[C.j] if C.j in result.components.keys() else 0},{result.components[C.k] if C.k in result.components.keys() else 0})')
                 else:
                     print(result)

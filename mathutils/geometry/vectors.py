@@ -36,31 +36,34 @@ def parse_vectors(lst: list[str | list]) -> list[str | list]:
                 parsed[lst.index(element)] = parse_vectors(element)
         else:
             match element:
-                case '·': parsed[lst.index(element)] = '.dot'
-                case '^': parsed[lst.index(element)] = '.cross'
+                case '·':
+                    index = lst.index(element)
+                    parsed[index] = '.dot('
+                    parsed.insert(index+2, ')')
+                case '^':
+                    index = lst.index(element)
+                    parsed[index] = '.cross('
+                    parsed.insert(index+2, ')')
     return parsed
 
-def process_vectors(raw: str, C: CoordSys3D) -> VectorAdd | Expr | None:
+def process_vectors(raw: str, C: CoordSys3D, env: dict) -> tuple[VectorAdd | Expr | None, dict]:
     try:
-        parsed = safe_eval(construct_string(parse_vectors(str_to_list(raw))), { 'class': VectorAdd,
-            'whitelist': {"dot": VectorAdd.dot, "cross": VectorAdd.cross},
-            'vars': {'C': C}, 'attrs': ['i', 'j', 'k']})
+        parsed, env = safe_eval(construct_string(parse_vectors(str_to_list(raw))), env)
     except SyntaxError as e:
         print('Input not understood! Look for any formatting or other mistakes and try again.')
         msg_list=list(e.text)
         msg_list.insert(e.offset-1,' ')
         msg_list.insert(e.end_offset+1, ' ')
         print(f'The error was here: {"".join(msg_list)}')
-        return None
-    except TypeError as e:
+        return None, env
+    except TypeError:
         print('Types mismatched! It seems like you are trying to operate a number with a vector in an incompatible way')
         print('Make sure you are doing the correct operations and try again.')
-        raise e
-        return None
+        return None, env
     except ValueError as e:
         print(e)
-        import traceback
-        traceback.print_tb(e.__traceback__)
-        return None
+        return None, env
+    except NameError as e:
+        print(e)
     else:
-        return parsed
+        return parsed, env
