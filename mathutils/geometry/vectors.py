@@ -36,7 +36,7 @@ def parse_vectors(lst: list[str | list]) -> list[str | list]:
                 parsed[lst.index(element)] = parse_vectors(element)
         else:
             match element:
-                case '·':
+                case '·' | '\u2022':
                     index = lst.index(element)
                     parsed[index] = '.dot('
                     parsed.insert(index+2, ')')
