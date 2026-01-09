@@ -4,11 +4,6 @@ from sympy.parsing.sympy_parser import T
 import re
 
 
-class GeomPoint:
-    def __init__(self, name: str, p: Point):
-        self.name = name
-        self.point = p
-
 def str_to_list(raw: str) -> list[str | list]:
     parsed = []
     if re.match(r'([A-Z]+\(-?\d(\.\d+)?,-?\d(\.\d+)?(,-?\d(\.\d+)?)?\))', raw):
@@ -33,7 +28,7 @@ def parse_equations(raw: list[str | list]):
     parsed += raw.copy()
     if len(raw) == 2 and type(raw[0]) is str and type(raw[1]) is list and len(raw[1]) == 3 and all(isinstance(i, Expr) for i in raw[1]):
         parsed.insert(-1, '=')
-        parsed[-1] = GeomPoint(raw[0], Point(*raw[1]))
+        parsed[-1] = Point(*raw[1])
     else:
         transformations = T[1:5]+T[6]+T[8]+T[7]+T[9:]
         equations: list[Equality] = [parse_expr(eq, transformations=transformations).simplify() for eq in raw[-1]]
