@@ -52,9 +52,10 @@ class SafeEval(ast.NodeVisitor):
         return node.value
 
     def visit_Name(self, node):
-        if node.id not in self.env['whitelist'] and node.id not in self.env['vars']:
+        classes = [cls.__name__ for cls in self.env['classes']]
+        if node.id not in self.env['whitelist'] and node.id not in self.env['vars'] and node.id not in classes:
             raise NameError(f"Undefined variable '{node.id}'")
-        return self.env['whitelist'][node.id] if node.id in self.env['whitelist'] else self.env['vars'][node.id]
+        return self.env['whitelist'][node.id] if node.id in self.env['whitelist'] else self.env['vars'][node.id] if node.id in self.env['vars'] else self.env['classes'][classes.index(node.id)]
 
     def visit_Attribute(self, node):
         if type(node.value) is not ast.Name:
@@ -81,7 +82,7 @@ class SafeEval(ast.NodeVisitor):
             method = node.func.attr
             if method not in self.env['whitelist']:
                 raise ValueError(f"Method {method} not allowed")
-            if method in self.env['whitelist'] and isinstance(self.visit(node.func.value), self.env['class']):
+            if method in self.env['whitelist'] and type(self.visit(node.func.value)) in self.env['classes']:
                 args = [self.visit(arg) for arg in node.args]
                 if type(node.func.value) is ast.Name and node.func.value.id in self.env['vars']:
                     return getattr(self.env['vars'][node.func.value.id], method)(*args)
@@ -93,11 +94,11 @@ class SafeEval(ast.NodeVisitor):
 
         elif isinstance(node.func, ast.Name):
             func_name = node.func.id
-            if func_name not in self.ALLOWED_FUNCTIONS:
+            if func_name not in self.ALLOWED_FUNCTIONS and self.visit(node.func) not in self.env['classes']:
                 raise ValueError(f"Function '{func_name}' is not allowed")
 
             args = [self.visit(arg) for arg in node.args]
-            return self.ALLOWED_FUNCTIONS[func_name](*args)
+            return self.ALLOWED_FUNCTIONS[func_name](*args) if func_name in self.ALLOWED_FUNCTIONS else self.visit(node.func)(*args)
         else:
             raise ValueError('Call not allowed.')
 
@@ -113,7 +114,7 @@ def safe_eval(code: str, env=None):
     try:
         ast.parse(code, mode='eval')
     except SyntaxError:
-        exec(code, evaluator.env['vars'])
+        exec(code, evaluator.env['vars'] | dict((k,v) for k,v in zip([cls.__name__ for cls in env['classes']], env['classes'])))
         return None, evaluator.env
     else:
-        return eval(code, evaluator.env['vars']), evaluator.env
+        return eval(code, evaluator.env['vars'] | dict((k,v) for k,v in zip([cls.__name__ for cls in env['classes']], env['classes']))), evaluator.env
