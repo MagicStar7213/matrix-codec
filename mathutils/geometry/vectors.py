@@ -1,8 +1,28 @@
 from sympy import Expr
-from sympy.vector import CoordSys3D, VectorAdd
+from sympy.vector import CoordSys3D, VectorAdd, BaseVector, VectorMul
 
 from mathutils.parser import construct_string, are_elements_numbers, safe_eval
 
+
+def main():
+    C = CoordSys3D('C')
+    env = { 'class': VectorAdd,
+            'whitelist': ['dot', 'cross'],
+            'vars': {'C': C}, 'attrs': ['i', 'j', 'k']}
+    print("""
+     _   _ _|_  _  ._  _ 
+ \\/ (/_ (_  |  (_) |  _\\ """)
+    while True:
+        raw = input('>> ')
+        if raw == 'q':
+            return
+        else:
+            result, env = process_vectors(raw, C, env)
+            if result is not None:
+                if type(result) in [BaseVector, VectorAdd, VectorMul]:
+                    print(f'({result.components[C.i] if C.i in result.components.keys() else 0},{result.components[C.j] if C.j in result.components.keys() else 0},{result.components[C.k] if C.k in result.components.keys() else 0})')
+                else:
+                    print(result)
 
 def str_to_list(raw: str) -> list[str | list]:
     stack: list[list[str | list]] = [[]]
