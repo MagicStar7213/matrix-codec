@@ -6,7 +6,7 @@ from mathutils.parser import construct_string, are_elements_numbers, safe_eval
 
 def main():
     C = CoordSys3D('C')
-    env = { 'class': VectorAdd,
+    env = { 'classes': [BaseVector, VectorAdd, VectorMul],
             'whitelist': ['dot', 'cross'],
             'vars': {'C': C}, 'attrs': ['i', 'j', 'k']}
     print("""
