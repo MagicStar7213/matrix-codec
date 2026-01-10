@@ -48,20 +48,18 @@ def str_to_list(raw: str) -> list[str | list]:
 
 def parse_vectors(lst: list[str | list]) -> list[str | list]:
     parsed = lst.copy()
-    for element in lst:
+    for index, element in enumerate(lst):
         if type(element) is list:
             if all(isinstance(x,str) for x in element) and len(element) == 3 and are_elements_numbers(element):
-                parsed[lst.index(element)] = f'({element[0]}*C.i+{element[1]}*C.j+{element[2]}*C.k)'.replace('+-','-')
+                parsed[index] = f'({element[0]}*C.i+{element[1]}*C.j+{element[2]}*C.k)'.replace('+-','-')
             else:
-                parsed[lst.index(element)] = parse_vectors(element)
+                parsed[index] = parse_vectors(element)
         else:
             match element:
                 case '·' | '\u2022':
-                    index = lst.index(element)
                     parsed[index] = '.dot('
                     parsed.insert(index+2, ')')
                 case '^':
-                    index = lst.index(element)
                     parsed[index] = '.cross('
                     parsed.insert(index+2, ')')
     return parsed
