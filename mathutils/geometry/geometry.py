@@ -42,9 +42,11 @@ def get_plane(eq: Equality) -> Plane:
     p1 = Point3D(0, 0, solve(eq.subs(x, 0).subs(y, 0), z)[0])
     return Plane(p1, normal_vector=(eq.lhs.coeff(x), eq.lhs.coeff(y), eq.lhs.coeff(z)))
 
-def parse_equations(raw: list[str | list]):
+def parse_equations(raw: list[str | list], env: dict):
     parsed: list[str | Point3D | Line3D | Plane] = []
     parsed += raw.copy()
+    if construct_string(raw) in env['vars']:
+        return construct_string(raw)
     if len(raw) == 2 and type(raw[0]) is str and type(raw[1]) is list and len(raw[1]) == 3 and all(isinstance(i, Expr) for i in raw[1]):
         parsed.insert(-1, '=')
         parsed[-1] = Point3D(*raw[1])
@@ -63,7 +65,7 @@ def parse_equations(raw: list[str | list]):
 
 def process_geometry(raw: str, env: dict) -> tuple[GeometryEntity | None, dict]:
     try:
-        parsed, env = safe_eval(construct_string(parse_equations(str_to_list(raw))), env)
+        parsed, env = safe_eval(construct_string(parse_equations(str_to_list(raw), env)), env)
     except SyntaxError as e:
         print('Input not understood! Look for any formatting or other mistakes and try again.')
         msg_list=list(e.text)
