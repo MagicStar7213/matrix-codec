@@ -102,6 +102,14 @@ class SafeEval(ast.NodeVisitor):
         else:
             raise ValueError('Call not allowed.')
 
+    def visit_Tuple(self, node):
+        if type(node.ctx) is ast.Store:
+            raise ValueError('Storing variables as tuple is not allowed')
+        return tuple(self.visit(e) for e in list(node.elts))
+
+    def visit_Expression(self, node):
+        return self.visit(node.body)
+
     def generic_visit(self, node):
         raise ValueError(f"Disallowed syntax: {type(node).__name__}")
 
