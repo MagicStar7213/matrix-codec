@@ -1,6 +1,8 @@
 from sympy import parse_expr, Equality, Expr, Point3D, solve, Plane, Line3D
 from sympy.abc import x, y ,z
+from sympy.geometry.entity import GeometryEntity
 from sympy.parsing.sympy_parser import T
+from mathutils.parser import construct_string, safe_eval
 import re
 
 
@@ -42,3 +44,24 @@ def parse_equations(raw: list[str | list]):
             case _:
                 raise ValueError('Objects defined by more than 2 equations are not supported')
     return list(map(str, parsed))
+
+def process_geometry(raw: str, env: dict) -> tuple[GeometryEntity | None, dict]:
+    try:
+        parsed, env = safe_eval(construct_string(parse_equations(str_to_list(raw))), env)
+    except SyntaxError as e:
+        print('Input not understood! Look for any formatting or other mistakes and try again.')
+        msg_list=list(e.text)
+        msg_list.insert(e.offset-1,' ')
+        msg_list.insert(e.end_offset+1, ' ')
+        print(f'The error was here: {"".join(msg_list)}')
+        return None, env
+    except TypeError as e:
+        print(f'Type error: {e}')
+        return None, env
+    except ValueError as e:
+        print(f'Value error: {e}')
+        return None, env
+    except NameError as e:
+        print(f'Name error: {e}')
+    else:
+        return parsed, env
