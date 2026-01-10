@@ -1,5 +1,5 @@
 from .vectors import main as vectors
-
+from .geometry import main as geometry
 
 def main():
     print("""
@@ -13,7 +13,7 @@ def main():
     while True:
         option = input("Elige una opción: Geometría [g], Vectores [v] o Salir [q]: ")
         match option:
-            case "g": pass
+            case "g": geometry()
             case "v": vectors()
             case "q": break
             case _:

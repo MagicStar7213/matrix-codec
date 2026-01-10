@@ -6,6 +6,22 @@ from mathutils.parser import construct_string, safe_eval
 import re
 
 
+def main():
+    env = { 'classes': [Plane, Line3D, Point3D],
+            'whitelist': [],
+            'vars': {}}
+    print("""
+_  _  _ | _|_. _   _  _  _  _ _  _ _|_ _ 
+(_|| |(_||\\/| |(_  (_|(/_(_)| | |(/_ | |\\/
+          /         _|                  /  """)
+    while True:
+        raw = input('>> ')
+        if raw == 'q':
+            return
+        else:
+            processed, env = process_geometry(raw, env)
+            ... # TODO: Implement logic
+
 def str_to_list(raw: str) -> list[str | list]:
     parsed: list[str | list] = []
     if re.match(r'([A-Z]+\(-?\d(\.\d+)?,-?\d(\.\d+)?(,-?\d(\.\d+)?)?\))', raw):
