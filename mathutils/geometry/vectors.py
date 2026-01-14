@@ -41,7 +41,8 @@ def str_to_list(raw: str) -> list[str | list]:
         else:
             if char.isdigit() and current and current[-1] == '-':
                 current[-1] = f'-{char}'
-            elif char == ',': pass
+            elif char == ',':
+                pass
             else:
                 current.append(char)
     return stack[0]
