@@ -30,7 +30,7 @@ def str_to_list(raw: str) -> list[str | list]:
 
     for char in raw:
         if char == '(':
-            new_list: list[str] = []
+            new_list = []
             current.append(new_list)
             stack.append(new_list)
             current = new_list
