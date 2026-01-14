@@ -56,13 +56,12 @@ def parse_vectors(lst: list[str | list]) -> list[str | list]:
             else:
                 parsed[index] = parse_vectors(element)
         else:
-            match element:
-                case '·' | '\u2022':
-                    parsed[index] = '.dot('
-                    parsed.insert(index+2, ')')
-                case '^':
-                    parsed[index] = '.cross('
-                    parsed.insert(index+2, ')')
+            if element == '·' or element == '\u2022':
+                parsed[index] = '.dot('
+                parsed.insert(index+2, ')')
+            elif element ==  '^':
+                parsed[index] = '.cross('
+                parsed.insert(index+2, ')')
     return parsed
 
 def process_vectors(raw: str, C: CoordSys3D, env: dict) -> tuple[VectorAdd | Expr | None, dict]:
