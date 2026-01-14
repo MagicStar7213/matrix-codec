@@ -32,7 +32,7 @@ def str_to_list(raw: str) -> list[str | list]:
     for char in raw:
         parsed.append(char)
         if char == ':':
-            parsed = [''.join(parsed[:-1]), '=']
+            parsed = [''.join(list(map(str, parsed[:-1]))), '=']
             parsed[-1] = '='
             parsed.append(raw[raw.index(char) + 1:].split(','))
             break
