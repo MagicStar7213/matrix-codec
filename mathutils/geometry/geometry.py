@@ -76,5 +76,6 @@ def process_geometry(raw: str, env: dict) -> tuple[GeometryEntity | None, dict]:
         return None, env
     except NameError as e:
         print(f'Name error: {e}')
+        return None, env
     else:
         return parsed, env

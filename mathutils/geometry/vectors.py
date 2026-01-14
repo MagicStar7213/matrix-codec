@@ -82,8 +82,5 @@ def process_vectors(raw: str, C: CoordSys3D, env: dict) -> tuple[VectorAdd | Exp
     except NameError as e:
         print(f'Name error: {e}')
         return None, env
-    except Exception as e:
-        print(f'{e.__class__.__name__}: {e}')
-        return None, env
     parsed, env = safe_eval(construct_string(parse_vectors(str_to_list(raw))), env)
     return parsed, env
