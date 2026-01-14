@@ -53,14 +53,13 @@ def parse_equations(raw: list[str | list], env: dict):
     else:
         transformations = T[1:5]+T[6]+T[8]+T[7]+T[9:]
         equations: list[Equality] = [parse_expr(eq, transformations=transformations).simplify() for eq in raw[-1]]
-        match len(equations):
-            case 1:
-                eq = equations[0]
-                parsed[-1] = get_plane(eq)
-            case 2:
-                parsed[-1] = get_plane(equations[0]).intersection(get_plane(equations[1]))[0]
-            case _:
-                raise ValueError('Objects defined by more than 2 equations are not supported')
+        if len(equations) == 1:
+            eq = equations[0]
+            parsed[-1] = get_plane(eq)
+        elif len(equations) == 2:
+            parsed[-1] = get_plane(equations[0]).intersection(get_plane(equations[1]))[0]
+        else:
+            raise ValueError('Objects defined by more than 2 equations are not supported')
     return list(map(str, parsed))
 
 def process_geometry(raw: str, env: dict) -> tuple[GeometryEntity | None, dict]:
