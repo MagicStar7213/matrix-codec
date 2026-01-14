@@ -66,7 +66,7 @@ def parse_vectors(lst: list[str | list]) -> list[str | list]:
 
 def process_vectors(raw: str, C: CoordSys3D, env: dict) -> tuple[VectorAdd | Expr | None, dict]:
     try:
-        parsed, env = safe_eval(construct_string(parse_vectors(str_to_list(raw))), env)
+        safe_eval(construct_string(parse_vectors(str_to_list(raw))), env)
     except SyntaxError as e:
         print(f'Syntax error: {e}')
         return None, env
@@ -78,5 +78,9 @@ def process_vectors(raw: str, C: CoordSys3D, env: dict) -> tuple[VectorAdd | Exp
         return None, env
     except NameError as e:
         print(f'Name error: {e}')
-    else:
-        return parsed, env
+        return None, env
+    except Exception as e:
+        print(f'{e.__class__.__name__}: {e}')
+        return None, env
+    parsed, env = safe_eval(construct_string(parse_vectors(str_to_list(raw))), env)
+    return parsed, env
