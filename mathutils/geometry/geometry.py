@@ -67,11 +67,7 @@ def process_geometry(raw: str, env: dict) -> tuple[GeometryEntity | None, dict]:
     try:
         parsed, env = safe_eval(construct_string(parse_equations(str_to_list(raw), env)), env)
     except SyntaxError as e:
-        print('Input not understood! Look for any formatting or other mistakes and try again.')
-        msg_list=list(e.text)
-        msg_list.insert(e.offset-1,' ')
-        msg_list.insert(e.end_offset+1, ' ')
-        print(f'The error was here: {"".join(msg_list)}')
+        print(f'Syntax error: {e}')
         return None, env
     except TypeError as e:
         print(f'Type error: {e}')
