@@ -57,7 +57,8 @@ def parse_equations(raw: list[str | list], env: dict):
             eq = equations[0]
             parsed[-1] = get_plane(eq)
         elif len(equations) == 2:
-            parsed[-1] = get_plane(equations[0]).intersection(get_plane(equations[1]))[0]
+            line = get_plane(equations[0]).intersection(get_plane(equations[1]))
+            parsed[-1] = '' if not line else line
         else:
             raise ValueError('Objects defined by more than 2 equations are not supported')
     return list(map(str, parsed))
