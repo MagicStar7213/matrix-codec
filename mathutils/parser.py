@@ -12,7 +12,7 @@ def are_elements_numbers(lst: list[str]) -> bool:
     return True
 
 def construct_string(lst: list[str | list]) -> str:
-    return ''.join([construct_string(x) if type(x) is list else x for x in lst])
+    return ''.join([construct_string(x) if isinstance(x, list) else x for x in lst])
 
 
 
