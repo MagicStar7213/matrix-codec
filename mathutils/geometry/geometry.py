@@ -64,7 +64,8 @@ def parse_equations(raw: list[str | list], env: dict):
 
 def process_geometry(raw: str, env: dict) -> tuple[GeometryEntity | None, dict]:
     try:
-        parsed, env = safe_eval(construct_string(parse_equations(str_to_list(raw), env)), env)
+        equations = parse_equations(str_to_list(raw), env)
+        parsed, env = safe_eval(equations if isinstance(equations,str) else construct_string(equations), env) # type: ignore
     except SyntaxError as e:
         print(f'Syntax error: {e}')
         return None, env
