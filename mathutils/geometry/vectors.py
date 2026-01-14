@@ -6,6 +6,9 @@ from mathutils.parser import construct_string, are_elements_numbers, safe_eval
 
 def main():
     C = CoordSys3D('C')
+    i = getattr(C, 'i')
+    j = getattr(C, "j")
+    k = getattr(C, "k")
     env = { 'classes': [BaseVector, VectorAdd, VectorMul],
             'whitelist': ['dot', 'cross'],
             'vars': {'C': C}, 'attrs': ['i', 'j', 'k']}
@@ -20,7 +23,7 @@ def main():
             result, env = process_vectors(raw, C, env)
             if result is not None:
                 if type(result) in [BaseVector, VectorAdd, VectorMul]:
-                    print(f'({result.components[C.i] if C.i in result.components.keys() else 0},{result.components[C.j] if C.j in result.components.keys() else 0},{result.components[C.k] if C.k in result.components.keys() else 0})')
+                    print(f'({result.components[i] if i in result.components.keys() else 0},{result.components[j] if j in result.components.keys() else 0},{result.components[k] if k in result.components.keys() else 0})')
                 else:
                     print(result)
 
