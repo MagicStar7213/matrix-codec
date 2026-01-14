@@ -22,7 +22,7 @@ def main():
         else:
             result, env = process_vectors(raw, C, env)
             if result is not None:
-                if type(result) in [BaseVector, VectorAdd, VectorMul]:
+                if isinstance(result,(BaseVector, VectorAdd, VectorMul)):
                     print(f'({result.components[i] if i in result.components.keys() else 0},{result.components[j] if j in result.components.keys() else 0},{result.components[k] if k in result.components.keys() else 0})')
                 else:
                     print(result)
