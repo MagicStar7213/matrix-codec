@@ -1,4 +1,4 @@
-from sympy import Expr, Matrix, NonSquareMatrixError, ShapeError, Symbol, init_printing, ordered, pprint, nsimplify, factor, solve
+from sympy import Expr, Matrix, NonSquareMatrixError, ShapeError, Symbol, ordered, pprint, nsimplify, factor, solve
 from .determinants import del_proportional_lines, del_zero_lines
 from .utils import matrix_is_zero, list_to_matrix, decompose_matrix
 
