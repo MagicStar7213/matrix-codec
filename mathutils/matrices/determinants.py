@@ -29,7 +29,8 @@ def del_proportional_lines(matrix: Matrix) -> Matrix:
                         elif Expr(matrix[row1,col]).is_number:
                             k.append(Mul(Rational(1,matrix[row1,col]),matrix[row,col]))
                     if k.count(nan) != len(k) and k.count(k[0]) == len(k) and row1 not in del_rows:
-                        del_rows.append(row1 if LessThan(matrix[row,0], matrix[row1,0]) else row)
+                        if not Expr(matrix[row,0]).free_symbols and not Expr(matrix[row1,0]).free_symbols:
+                            del_rows.append(row1 if LessThan(matrix[row,0], matrix[row1,0]) else row)
     del_rows.reverse()
     for r in del_rows:
         print(f'Trying to remove row {r}')
@@ -50,7 +51,8 @@ def del_proportional_lines(matrix: Matrix) -> Matrix:
                         elif Expr(matrix[row,col1]).is_number:
                             k.append(Mul(Rational(1,matrix[row,col1]),matrix[row,col]))
                     if k.count(nan) != len(k) and k.count(k[0]) == len(k) and col1 not in del_cols:
-                        del_cols.append(col1 if LessThan(matrix[0,col], matrix[0,col1]) else col)
+                        if not Expr(matrix[0,col]).free_symbols and not Expr(matrix[0,col1]).free_symbols:
+                            del_cols.append(col1 if LessThan(matrix[0,col], matrix[0,col1]) else col)
     del_cols.reverse()
     for c in del_cols:
         print(f'Trying to remove column {c}')
