@@ -3,6 +3,63 @@ from .determinants import del_proportional_lines, del_zero_lines
 from .utils import matrix_is_zero, list_to_matrix, decompose_matrix
 
 
+def rank(A: Matrix, minors_list:list[Matrix] | None, unequalities: list[Expr] | None = None, symbols: list[Symbol] | None=None) -> list[tuple[tuple[Symbol, Expr | list[Expr]], int | list]] | int:
+    if A.is_symbolic():
+        if minors_list is None:
+            minors_list = []
+            if A.shape[0] != A.shape[1]:
+                minors_list = decompose_matrix([A])
+                all_square = True
+                for minor in minors_list:
+                    if minor.shape[0] != minor.shape[1]:
+                        all_square = False
+                while not all_square:
+                    all_square = True
+                    for minor in minors_list:
+                        if minor.shape[0] != minor.shape[1]:
+                            all_square = False
+                            break
+                    if not all_square:
+                        minors_list = decompose_matrix(minors_list)
+            else:
+                minors_list = [A]
+        if symbols is None:
+            symbols = list(ordered(A.free_symbols))
+        symbol = symbols[0]
+        zero_values: list[Expr] = []
+        for raw_minor in minors_list:
+            minor = del_proportional_lines(del_zero_lines(raw_minor))
+            if not Expr(minor.det()).is_number and symbol in Expr(minor.det()).free_symbols:
+                for root in solve(minor.det(), symbol):
+                    minors_affected = 1
+                    mins = minors_list.copy()
+                    mins.remove(minor)
+                    for m in mins:
+                        if (
+                            Matrix(m.subs(symbol, root)).det() == 0
+                            or not Expr(Matrix(m.subs(symbol, root)).det()).is_number
+                        ):
+                            minors_affected += 1
+                    if minors_affected == len(minors_list) and root not in zero_values:
+                        if unequalities is None or root not in unequalities:
+                            zero_values.append(root)
+        if zero_values:
+            ranks: list[tuple[tuple[Symbol, Expr | list[Expr]], int | list]] = []
+            new_unequalities = zero_values + unequalities if unequalities else []
+            syms_new: list[Symbol] = [x for x in symbols if x != symbol]
+            ranks.append(((symbol, new_unequalities), rank(A, minors_list, new_unequalities, syms_new) if syms_new else A.rank()))
+            for root in zero_values:
+                B = Matrix(A.subs(symbol, root))
+                syms_new: list[Symbol] = [x for x in symbols if x != symbol]
+                ranks.append(((symbol, root), rank(B, [minor.subs(symbol, root) for minor in minors_list], None, syms_new) if syms_new else B.rank()))
+            return ranks
+        else:
+            return A.rank()
+    else:
+        return A.rank(iszerofunc=matrix_is_zero)
+
+
+
 def rank_per_symbol(A: Matrix, minors_list: list[Matrix], symbol: Symbol, symbols: list[Symbol], indents: int = 0):
     indentation = "".join(["  " for _ in range(indents)])
     zero_values: list[Expr] = []
