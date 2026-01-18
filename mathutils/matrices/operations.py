@@ -1,4 +1,4 @@
-from sympy import Expr, Matrix, NonSquareMatrixError, ShapeError, Symbol, ordered, pprint, nsimplify, factor, solve
+from sympy import Expr, Integer, Matrix, NonSquareMatrixError, ShapeError, Symbol, ordered, pprint, nsimplify, factor, solve
 from .determinants import del_proportional_lines, del_zero_lines
 from .utils import matrix_is_zero, list_to_matrix, decompose_matrix
 
@@ -26,6 +26,8 @@ def rank(A: Matrix, minors_list:list[Matrix] | None = None, unequalities: list[E
                     if all(Matrix(m.subs(symbol, root)).det() == 0 or not Expr(Matrix(m.subs(symbol, root)).det()).is_number for m in [M for M in minors_list if M != minor]) and root not in zero_values:
                         if unequalities is None or root not in unequalities:
                             zero_values.append(root)
+        if A.subs(symbol,0).is_zero_matrix and Integer(0) not in zero_values:
+            zero_values.append(Integer(0))
         if zero_values:
             ranks: list[tuple[tuple[Symbol, Expr | list[Expr]], int | list]] = []
             new_unequalities = zero_values + (unequalities if unequalities else [])
