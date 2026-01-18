@@ -9,18 +9,10 @@ def rank(A: Matrix, minors_list:list[Matrix] | None, unequalities: list[Expr] | 
             minors_list = []
             if A.shape[0] != A.shape[1]:
                 minors_list = decompose_matrix([A])
-                all_square = True
-                for minor in minors_list:
-                    if minor.shape[0] != minor.shape[1]:
-                        all_square = False
-                while not all_square:
-                    all_square = True
-                    for minor in minors_list:
-                        if minor.shape[0] != minor.shape[1]:
-                            all_square = False
-                            break
-                    if not all_square:
-                        minors_list = decompose_matrix(minors_list)
+                while not all(minor.is_square for minor in minors_list):
+                    square_minors = [minor for minor in minors_list if minor.is_square]
+                    non_square_minors = [minor for minor in minors_list if not minor.is_square]
+                    minors_list = decompose_matrix(non_square_minors) + square_minors
             else:
                 minors_list = [A]
         if symbols is None:
