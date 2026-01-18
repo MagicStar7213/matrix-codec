@@ -23,16 +23,7 @@ def rank(A: Matrix, minors_list:list[Matrix] | None, unequalities: list[Expr] | 
             minor = del_proportional_lines(del_zero_lines(raw_minor))
             if not Expr(minor.det()).is_number and symbol in Expr(minor.det()).free_symbols:
                 for root in solve(minor.det(), symbol):
-                    minors_affected = 1
-                    mins = minors_list.copy()
-                    mins.remove(minor)
-                    for m in mins:
-                        if (
-                            Matrix(m.subs(symbol, root)).det() == 0
-                            or not Expr(Matrix(m.subs(symbol, root)).det()).is_number
-                        ):
-                            minors_affected += 1
-                    if minors_affected == len(minors_list) and root not in zero_values:
+                    if all(Matrix(m.subs(symbol, root)).det() == 0 or not Expr(Matrix(m.subs(symbol, root)).det()).is_number for m in [M for M in minors_list if M != minor]) and root not in zero_values:
                         if unequalities is None or root not in unequalities:
                             zero_values.append(root)
         if zero_values:
