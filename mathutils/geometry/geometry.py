@@ -1,4 +1,4 @@
-from sympy import parse_expr, Equality, Expr, Point3D, solve, Plane, Line3D
+from sympy import Symbol, parse_expr, Equality, Expr, Point3D, solve, Plane, Line3D
 from sympy.abc import x, y ,z
 from sympy.geometry.entity import GeometryEntity
 from sympy.parsing.sympy_parser import T
@@ -39,8 +39,22 @@ def str_to_list(raw: str) -> list[str | list]:
     return parsed
 
 def get_plane(eq: Equality) -> Plane:
-    p1 = Point3D(0, 0, solve(eq.subs(x, 0).subs(y, 0), z)[0])
-    return Plane(p1, normal_vector=(Expr(eq.lhs).coeff(x), Expr(eq.lhs).coeff(y), Expr(eq.lhs).coeff(z)))
+    def_point:dict[Symbol,int] = {x:0,y:0,z:0}
+    coeffs: list[tuple[Symbol, Expr]] = [(i, eq.lhs.coeff(i)) for i in [x, y, z] if eq.lhs.coeff(i) != 0] # type: ignore
+    if len(coeffs) == 1:
+        var = coeffs[0][0]
+        point = def_point.copy()
+        point.update({var: solve(eq.subs(*[(i, 0) for i in [x, y, z] if i != var]))[0]})
+        p1 = Point3D(*[v for (_,v) in point.items()])
+    elif len(coeffs) == 2:
+        vars = [i[0] for i in coeffs]
+        point = def_point.copy()
+        point.update({vars[1]: solve(eq.subs(*[(i, 0) for i in [x, y, z] if i != vars[1]]))})
+        p1 = Point3D(*[v for (_, v) in point.items()])
+    else:
+        p1 = Point3D(0,0, solve(eq.subs(*[(x,0),(y,0)]),z))
+    
+    return Plane(p1, normal_vector=(eq.lhs.coeff(x), eq.lhs.coeff(y), eq.lhs.coeff(z))) # type: ignore
 
 def parse_equations(raw: list[str | list], env: dict):
     parsed: list[str | list | Point3D | Line3D | Plane] = []
