@@ -12,13 +12,15 @@ def main():
     """)
     while True:
         option = input("Elige una opción: Geometría [g], Vectores [v] o Salir [q]: ")
-        match option:
-            case "g": geometry()
-            case "v": vectors()
-            case "q": break
-            case _:
-                print('Error! Opción no disponible. Vuelve a intentarlo.')
-                continue
+        if option == 'g':  
+            geometry()
+        elif option == 'v':
+            vectors()
+        elif option == 'q':
+            break
+        else:
+            print('Error! Opción no disponible. Vuelve a intentarlo.')
+            continue
 
 if __name__ == '__main__':
     main()
