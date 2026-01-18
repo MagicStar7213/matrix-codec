@@ -28,7 +28,7 @@ def rank(A: Matrix, minors_list:list[Matrix] | None = None, unequalities: list[E
                             zero_values.append(root)
         if zero_values:
             ranks: list[tuple[tuple[Symbol, Expr | list[Expr]], int | list]] = []
-            new_unequalities = zero_values + unequalities if unequalities else []
+            new_unequalities = zero_values + (unequalities if unequalities else [])
             syms_new: list[Symbol] = [x for x in symbols if x != symbol]
             ranks.append(((symbol, new_unequalities), rank(A, minors_list, new_unequalities, syms_new) if syms_new else A.rank()))
             for root in zero_values:
