@@ -30,13 +30,13 @@ _  _  _ | _|_. _   _  _  _  _ _  _ _|_ _
             processed, env = process_geometry(raw, env)
             ... # TODO: Implement logic
 
-def str_to_list(raw: str) -> list[str | list]:
+def str_to_list(raw: str) -> list[str | list] | tuple[str,list[Expr]]:
     parsed: list[str | list] = []
     if re.match(r'([A-Z]+\(-?\d(\.\d+)?,-?\d(\.\d+)?(,-?\d(\.\d+)?)?\))', raw):
         separated = raw.split('(')
         separated[-1] = separated[-1].removesuffix(')')
-        parsed = [separated[0], list(map(parse_expr, separated[-1].split(',')))]
-        return parsed
+        point = (separated[0], list(map(parse_expr, separated[-1].split(','))))
+        return point
     for char in raw:
         parsed.append(char)
         if char == ':':
@@ -64,25 +64,27 @@ def get_plane(eq: Equality) -> Plane:
     
     return Plane(p1, normal_vector=(eq.lhs.coeff(x), eq.lhs.coeff(y), eq.lhs.coeff(z))) # type: ignore
 
-def parse_equations(raw: list[str | list], env: dict):
+def parse_equations(raw: list[str | list] | tuple[str, list[Expr]], env: dict):
     parsed: list[str | list | Point3D | Line3D | Plane] = []
-    parsed += raw.copy()
-    if construct_string(raw) in env['vars']:
-        return construct_string(raw)
-    if len(raw) == 2 and type(raw[0]) is str and type(raw[1]) is list and len(raw[1]) == 3 and all(isinstance(i, Expr) for i in raw[1]):
+    parsed += list(raw).copy()
+    if isinstance(raw, tuple):
         parsed.insert(-1, '=')
         parsed[-1] = Point3D(*raw[1])
     else:
-        transformations = T[1:5]+T[6]+T[8]+T[7]+T[9:]
-        equations: list[Equality] = [parse_expr(eq, transformations=transformations).simplify() for eq in raw[-1]]
-        if len(equations) == 1:
-            eq = equations[0]
-            parsed[-1] = get_plane(eq)
-        elif len(equations) == 2:
-            line = get_plane(equations[0]).intersection(get_plane(equations[1]))
-            parsed[-1] = '' if not line else line
+        if construct_string(raw) in env['vars']:
+            return construct_string(raw)
+        
         else:
-            raise ValueError('Objects defined by more than 2 equations are not supported')
+            transformations = T[1:5]+T[6]+T[8]+T[7]+T[9:]
+            equations: list[Equality] = [parse_expr(eq, transformations=transformations).simplify() for eq in raw[-1]]
+            if len(equations) == 1:
+                eq = equations[0]
+                parsed[-1] = get_plane(eq)
+            elif len(equations) == 2:
+                line = get_plane(equations[0]).intersection(get_plane(equations[1]))
+                parsed[-1] = '' if not line else line
+            else:
+                raise ValueError('Objects defined by more than 2 equations are not supported')
     return list(map(str, parsed))
 
 def process_geometry(raw: str, env: dict) -> tuple[GeometryEntity | None, dict]:
