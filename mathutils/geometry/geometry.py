@@ -2,6 +2,7 @@ from sympy import Symbol, parse_expr, Equality, Expr, Point3D, solve, Plane, Lin
 from sympy.abc import x, y ,z
 from sympy.geometry.entity import GeometryEntity
 from sympy.parsing.sympy_parser import T
+from mathutils.geometry.relative_positions import relpos
 from mathutils.parser import construct_string, safe_eval
 import re
 
@@ -18,6 +19,13 @@ _  _  _ | _|_. _   _  _  _  _ _  _ _|_ _
         raw = input('>> ')
         if raw == 'q':
             return
+        if re.match(r'relpos \w+,\w+(,\w)?', raw):
+            split = raw.removeprefix('relpos ').split(',')
+            geom = []
+            for geomid in split:
+                processed, env = process_geometry(geomid, env)
+                geom.append(processed)
+            print(relpos(*geom))
         else:
             processed, env = process_geometry(raw, env)
             ... # TODO: Implement logic
