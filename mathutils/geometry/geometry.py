@@ -1,6 +1,5 @@
 from sympy import Symbol, parse_expr, Equality, Expr, Point3D, solve, Plane, Line3D
 from sympy.abc import x, y ,z
-from sympy.geometry.entity import GeometryEntity
 from sympy.parsing.sympy_parser import T
 from mathutils.geometry.relative_positions import relpos
 from mathutils.parser import construct_string, safe_eval
@@ -22,7 +21,7 @@ def main():
         if re.match(r'relpos \w+,\w+(,\w)?', raw):
             split = raw.removeprefix('relpos ').split(',')
             geom = []
-            for geomid in split:
+            geom: list[Line3D | Plane] = []
                 processed, env = process_geometry(geomid, env)
                 geom.append(processed)
             print(relpos(*geom))
@@ -89,7 +88,7 @@ def parse_equations(raw: list[str | list] | tuple[str, list[Expr]], env: dict):
                 raise ValueError('Objects defined by more than 2 equations are not supported')
     return list(map(str, parsed))
 
-def process_geometry(raw: str, env: dict) -> tuple[GeometryEntity | None, dict]:
+def process_geometry(raw: str, env: dict) -> tuple[Line3D | Plane | None, dict]:
     try:
         equations = parse_equations(str_to_list(raw), env)
         parsed, env = safe_eval(equations if isinstance(equations,str) else construct_string(equations), env) # type: ignore
