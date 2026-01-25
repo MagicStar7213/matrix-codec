@@ -20,10 +20,11 @@ def main():
             return
         if re.match(r'relpos \w+,\w+(,\w)?', raw):
             split = raw.removeprefix('relpos ').split(',')
-            geom = []
             geom: list[Line3D | Plane] = []
+            for geomid in split:
                 processed, env = process_geometry(geomid, env)
-                geom.append(processed)
+                if processed:
+                    geom.append(processed)
             print(relpos(*geom))
         elif raw.replace(' ','') == '':
             pass
