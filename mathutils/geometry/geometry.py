@@ -59,10 +59,10 @@ def get_plane(eq: Equality) -> Plane:
     elif len(coeffs) == 2:
         vars = [i[0] for i in coeffs]
         point = def_point.copy()
-        point.update({vars[1]: solve(eq.subs(*[(i, 0) for i in [x, y, z] if i != vars[1]]))})
+        point.update({vars[1]: solve(eq.subs([(i, 0) for i in [x, y, z] if i != vars[1]]), vars[1])[0]})
         p1 = Point3D(*[v for (_, v) in point.items()])
     else:
-        p1 = Point3D(0,0, solve(eq.subs(*[(x,0),(y,0)]),z))
+        p1 = Point3D(0,0, solve(eq.subs([(x,0),(y,0)]),z)[0])
     
     return Plane(p1, normal_vector=(eq.lhs.coeff(x), eq.lhs.coeff(y), eq.lhs.coeff(z))) # type: ignore
 
