@@ -1,4 +1,4 @@
-from sympy import Symbol, parse_expr, Equality, Expr, Point3D, solve, Plane, Line3D
+from sympy import N, Symbol, acos, asin, atan, parse_expr, Equality, Expr, Point3D, solve, Plane, Line3D
 from sympy.abc import x, y ,z
 from sympy.parsing.sympy_parser import T
 from mathutils.geometry.relative_positions import relpos
@@ -26,6 +26,15 @@ def main():
                 if processed:
                     geom.append(processed)
             print(relpos(*geom))
+        elif re.match(r'< \w+,\w+', raw):
+            split = raw.removeprefix("< ").split(",")
+            geom: list[Line3D | Plane] = []
+            for geomid in split:
+                processed, env = process_geometry(geomid, env)
+                if processed: 
+                    geom.append(processed)
+            angle = geom[0].angle_between(geom[1])
+            print(N(angle) if isinstance(angle, (asin,acos,atan)) else angle)
         elif raw.replace(' ','') == '':
             pass
         else:
