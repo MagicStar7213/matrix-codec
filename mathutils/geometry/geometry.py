@@ -75,10 +75,10 @@ def parse_equations(raw: list[str | list] | tuple[str, list[Expr]], env: dict):
     else:
         if construct_string(raw) in env['vars']:
             return construct_string(raw)
-        
         else:
             transformations = T[1:5]+T[6]+T[8]+T[7]+T[9:]
-            equations: list[Equality] = [parse_expr(eq, transformations=transformations).simplify() for eq in raw[-1]]
+            raw_equations: list[Equality] = [parse_expr(eq, transformations=transformations) for eq in raw[-1]]
+            equations: list[Equality] = [Equality(eq.lhs - eq.rhs,0) for eq in raw_equations] # type: ignore
             if len(equations) == 1:
                 eq = equations[0]
                 parsed[-1] = get_plane(eq)
