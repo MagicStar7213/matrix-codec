@@ -49,7 +49,7 @@ def str_to_list(raw: str) -> list[str | list] | tuple[str,list[Expr]]:
     return parsed
 
 def get_plane(eq: Equality) -> Plane:
-    def_point:dict[Symbol,int] = {x:0,y:0,z:0}
+    def_point:dict[Symbol,(int | Expr)] = {x:0,y:0,z:0}
     coeffs: list[tuple[Symbol, Expr]] = [(i, eq.lhs.coeff(i)) for i in [x, y, z] if eq.lhs.coeff(i) != 0] # type: ignore
     if len(coeffs) == 1:
         var = coeffs[0][0]
