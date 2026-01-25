@@ -40,7 +40,7 @@ def rectas(r1: Line, r2: Line) -> str:
         return 'se cruzan'
 
 def recta_plano(r: Line, p: Plane):
-    if p.is_coplanar(r):
+    if r in p:
         return 'coincidentes'
     elif p.is_parallel(r):
         return 'paralelos'
