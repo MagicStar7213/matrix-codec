@@ -26,6 +26,8 @@ _  _  _ | _|_. _   _  _  _  _ _  _ _|_ _
                 processed, env = process_geometry(geomid, env)
                 geom.append(processed)
             print(relpos(*geom))
+        elif raw.replace(' ','') == '':
+            pass
         else:
             processed, env = process_geometry(raw, env)
             ... # TODO: Implement logic
