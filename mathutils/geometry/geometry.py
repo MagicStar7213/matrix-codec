@@ -33,7 +33,10 @@ def main():
                 processed, env = process_geometry(geomid, env)
                 if processed: 
                     geom.append(processed)
-            angle = geom[0].angle_between(geom[1])
+            try:
+                angle = geom[0].angle_between(geom[1])
+            except AttributeError:
+                angle = geom[1].angle_between(geom[0])
             print(N(angle) if isinstance(angle, (asin,acos,atan)) else angle)
         elif raw.replace(' ','') == '':
             pass
