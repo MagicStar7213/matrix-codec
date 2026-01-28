@@ -1,4 +1,4 @@
-from sympy import N, Symbol, acos, asin, atan, parse_expr, Equality, Expr, Point3D, solve, Plane, Line3D
+from sympy import N, Symbol, acos, asin, atan, parse_expr, Equality, Expr, Point3D, pretty, solve, Plane, Line3D
 from sympy.abc import x, y ,z
 from sympy.parsing.sympy_parser import T
 from mathutils.geometry.relative_positions import relpos
@@ -37,7 +37,15 @@ def main():
                 angle = ang[0].angle_between(ang[1])
             except AttributeError:
                 angle = ang[1].angle_between(ang[0])
-            print(N(angle) if isinstance(angle, (asin,acos,atan)) else angle)
+            print(N(angle) if isinstance(angle, (asin,acos,atan)) else pretty(angle))
+        elif re.match(r"d \w+,\w+", raw):
+            split = raw.removeprefix("d ").split(",")
+            dist: list[Line3D | Plane | Point3D] = []
+            for geomid in split:
+                processed, env = process_geometry(geomid, env)
+                if processed:
+                    dist.append(processed)
+            print(pretty(dist[0].distance(dist[1])))
         elif raw.replace(' ','') == '':
             pass
         else:
