@@ -45,7 +45,8 @@ def main():
                 processed, env = process_geometry(geomid, env)
                 if processed:
                     dist.append(processed)
-            print(pretty(dist[0].distance(dist[1])))
+            distance = dist[0].distance(dist[1])
+            print(f'{pretty(distance)}{f" ({N(distance)})" if pretty(N(distance)) != pretty(distance) else ""}')
         elif raw.replace(' ','') == '':
             pass
         else:
