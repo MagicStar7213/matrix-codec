@@ -20,23 +20,23 @@ def main():
             return
         if re.match(r'relpos \w+,\w+(,\w)?', raw):
             split = raw.removeprefix('relpos ').split(',')
-            geom: list[Line3D | Plane] = []
+            relp: list[Line3D | Plane] = []
             for geomid in split:
                 processed, env = process_geometry(geomid, env)
                 if processed:
-                    geom.append(processed)
-            print(relpos(*geom))
+                    relp.append(processed)
+            print(relpos(*relp))
         elif re.match(r'< \w+,\w+', raw):
             split = raw.removeprefix("< ").split(",")
-            geom: list[Line3D | Plane] = []
+            ang: list[Line3D | Plane] = []
             for geomid in split:
                 processed, env = process_geometry(geomid, env)
                 if processed: 
-                    geom.append(processed)
+                    ang.append(processed)
             try:
-                angle = geom[0].angle_between(geom[1])
+                angle = ang[0].angle_between(ang[1])
             except AttributeError:
-                angle = geom[1].angle_between(geom[0])
+                angle = ang[1].angle_between(ang[0])
             print(N(angle) if isinstance(angle, (asin,acos,atan)) else angle)
         elif raw.replace(' ','') == '':
             pass
