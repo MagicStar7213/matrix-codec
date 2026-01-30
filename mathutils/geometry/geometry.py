@@ -46,7 +46,8 @@ def main():
                 if processed:
                     dist.append(processed)
             distance = dist[0].distance(dist[1])
-            print(f'{pretty(distance)}{f" ({N(distance)})" if pretty(N(distance)) != pretty(distance) else ""}')
+            num_distance = int(N(distance)) if float(N(distance)).is_integer() else float(N(distance))
+            print(f'{pretty(distance)}{f" ({num_distance})" if pretty(num_distance) != pretty(distance) else ""}')
         elif raw.replace(' ','') == '':
             pass
         else:
