@@ -20,7 +20,7 @@ def main():
             return
         if re.match(r'relpos \w+,\w+(,\w)?', raw):
             split = raw.removeprefix('relpos ').split(',')
-            relp: list[Line3D | Plane] = []
+            relp: list[Point3D | Line3D | Plane] = []
             for geomid in split:
                 processed, env = process_geometry(geomid, env)
                 if processed:
@@ -31,7 +31,7 @@ def main():
             ang: list[Line3D | Plane] = []
             for geomid in split:
                 processed, env = process_geometry(geomid, env)
-                if processed: 
+                if processed and not isinstance(processed, Point3D): 
                     ang.append(processed)
             try:
                 angle = ang[0].angle_between(ang[1])
@@ -122,7 +122,7 @@ def parse_equations(raw: list[str | list] | tuple[str, list[Expr]], env: dict):
                 raise ValueError('Objects defined by more than 2 equations are not supported')
     return list(map(str, parsed))
 
-def process_geometry(raw: str, env: dict) -> tuple[Line3D | Plane | None, dict]:
+def process_geometry(raw: str, env: dict) -> tuple[Point3D | Line3D | Plane | None, dict]:
     try:
         equations = parse_equations(str_to_list(raw), env)
         parsed, env = safe_eval(equations if isinstance(equations,str) else construct_string(equations), env) # type: ignore

@@ -16,8 +16,11 @@ def relpos(*geom):
             return planos(*geom)
         else:
             raise ValueError("It's only possible to calculate the relative position of up to 3 planes")
-    elif len(geom) == 2 and any(isinstance(x, Line) for x in geom) and any(isinstance(x, Plane) for x in geom):
-        return recta_plano(next(x for x in geom if isinstance(x, Line)), next(x for x in geom if isinstance(x, Plane)),)
+    elif len(geom) == 2:
+        if any(isinstance(x, Line) for x in geom) and any(isinstance(x, Plane) for x in geom):
+            return recta_plano(next(x for x in geom if isinstance(x, Line)), next(x for x in geom if isinstance(x, Plane)),)
+        elif any(isinstance(x, Point) for x in geom) and any(isinstance(x, (Line, Plane)) for x in geom):
+            return punto_recta_plano(next(x for x in geom if isinstance(x, Point)), next(x for x in geom if isinstance(x, (Line, Plane))))
 
 
 
@@ -28,6 +31,12 @@ def puntos(*points) -> str:
         return 'coplanarios'
     else:
         return 'ni alineados ni coplanarios'
+
+def punto_recta_plano(p: Point, r: Line | Plane):
+    if p in r:
+        return 'contenido'
+    else:
+        return 'no contenido'
 
 def rectas(r1: Line, r2: Line) -> str:
     if Line.are_concurrent(r1,r2):
