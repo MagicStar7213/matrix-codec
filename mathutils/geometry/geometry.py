@@ -1,4 +1,4 @@
-from sympy import N, Symbol, acos, asin, atan, parse_expr, Equality, Expr, Point3D, pretty, solve, Plane, Line3D
+from sympy import N, Symbol, Tuple, acos, asin, atan, parse_expr, Equality, Expr, Point3D, pretty, solve, Plane, Line3D
 from sympy.abc import x, y ,z
 from sympy.parsing.sympy_parser import T
 from mathutils.geometry.relative_positions import relpos
@@ -52,7 +52,18 @@ def main():
             pass
         else:
             processed, env = process_geometry(raw, env)
-            ... # TODO: Implement logic
+            if processed and processed in list(env['vars'].values()):
+                ind = list(env["vars"].values()).index(processed)
+                sym = pretty(Symbol(list(env['vars'].keys())[ind]))
+                if isinstance(processed, (Line3D, Plane)):
+                    eq = processed.equation()
+                    if isinstance(eq, Expr):
+                        eq = Equality(eq,0)
+                    elif isinstance(eq, Tuple):
+                        eq = tuple(Equality(i,0) for i in eq)
+                    print(f'{sym} ≡ {str(eq).replace("(","{").replace(")","}")}')
+                else:
+                    print(f'{sym}{processed.coordinates}')
 
 def str_to_list(raw: str) -> list[str | list] | tuple[str,list[Expr]]:
     parsed: list[str | list] = []
