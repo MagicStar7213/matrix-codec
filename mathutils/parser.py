@@ -25,6 +25,7 @@ class SafeEval(ast.NodeVisitor):
             ast.Mult: operator.mul,
             ast.Div: operator.truediv,
             ast.Pow: operator.pow,
+            ast.BitXor: operator.xor,
             ast.USub: operator.neg
         }
         self.ALLOWED_FUNCTIONS = {

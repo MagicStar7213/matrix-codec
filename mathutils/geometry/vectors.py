@@ -1,17 +1,46 @@
-from sympy import Expr
-from sympy.vector import CoordSys3D, VectorAdd, BaseVector, VectorMul
+from sympy import Expr, Matrix, symbols
 
 from mathutils.parser import construct_string, are_elements_numbers, safe_eval
 
 
+class Vector():
+    def __init__(self, x, y, z) -> None:
+        self.x = x
+        self.y = y
+        self.z = z
+    
+    def __neg__(self):
+        return Vector(-self.x, -self.y, -self.z)
+
+    def __add__(self, other: 'Vector'):
+        return Vector(self.x+other.x, self.y+other.y, self.z+other.z)
+    
+    def __sub__(self, other: 'Vector'):
+        return self + (-other)
+    
+    def __mul__(self, other: 'Vector'):
+        return self.escalar(other)
+    
+    def __xor__(self, other: 'Vector'):
+        return self.vectorial(other)
+
+    def escalar(self, v: 'Vector'):
+        return self.x*v.x + self.y*v.y + self.z*v.z
+    
+    def vectorial(self, v:'Vector'):
+        i,j,k = symbols('i j k')
+        vec = Matrix([[i,j,k],[self.x,self.y,self.z],[v.x,v.y,v.z]]).det()
+        return Vector(vec.coeff(i), vec.coeff(j), vec.coeff(k))
+    
+    def mixto(self, v:'Vector', w: 'Vector'):
+        return self.escalar(v.vectorial(w))
+
+
+
 def main():
-    C = CoordSys3D('C')
-    i = getattr(C, 'i')
-    j = getattr(C, "j")
-    k = getattr(C, "k")
-    env = { 'classes': [BaseVector, VectorAdd, VectorMul],
-            'whitelist': ['dot', 'cross'],
-            'vars': {'C': C}, 'attrs': ['i', 'j', 'k']}
+    env = { 'classes': [Vector],
+            'whitelist': [],
+            'vars': {}}
     print("""
      _   _ _|_  _  ._  _ 
  \\/ (/_ (_  |  (_) |  _\\ """)
@@ -20,10 +49,10 @@ def main():
         if raw == 'q':
             return
         else:
-            result, env = process_vectors(raw, C, env)
+            result, env = process_vectors(raw, env)
             if result is not None:
-                if isinstance(result,(BaseVector, VectorAdd, VectorMul)):
-                    print(f'({result.components[i] if i in result.components.keys() else 0},{result.components[j] if j in result.components.keys() else 0},{result.components[k] if k in result.components.keys() else 0})')
+                if isinstance(result,(Vector)):
+                    print(f'({result.x},{result.y},{result.z})')
                 else:
                     print(result)
 
@@ -55,19 +84,14 @@ def parse_vectors(lst: list[str | list]) -> list[str | list]:
     for index, element in enumerate(lst):
         if type(element) is list:
             if all(isinstance(x,str) for x in element) and len(element) == 3 and are_elements_numbers(element):
-                parsed[index] = f'({element[0]}*C.i+{element[1]}*C.j+{element[2]}*C.k)'.replace('+-','-')
+                parsed[index] = f'Vector({element[0]},{element[1]},{element[2]})'.replace('+-','-')
             else:
                 parsed[index] = parse_vectors(element)
-        else:
-            if element == '·' or element == '\u2022':
-                parsed[index] = '.dot('
-                parsed.insert(index+2, ')')
-            elif element ==  '^':
-                parsed[index] = '.cross('
-                parsed.insert(index+2, ')')
+        elif element == '·' or element == '\u2022':
+            parsed[index] = '*'
     return parsed
 
-def process_vectors(raw: str, C: CoordSys3D, env: dict) -> tuple[VectorAdd | Expr | None, dict]:
+def process_vectors(raw: str, env: dict) -> tuple[Vector | Expr | None, dict]:
     try:
         safe_eval(construct_string(parse_vectors(str_to_list(raw))), env)
     except SyntaxError as e:
