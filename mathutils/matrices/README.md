@@ -75,8 +75,5 @@ $`\begin{bmatrix}
 
 would be introduced into the program like this: `45/74/107//108/200/230//171/326/353 81/14/0//210/56/0//339/98/0`. After, you input the encoding matrix `1/2/3//4/5/6//7/8/9` and it gives us the original message `I LOVE PYTHON`
 
-### Using letters
-When entering matrices for any operation you can also include letters or expressions, just not divisions (as / is used for element separation, but it will be changed in the future). For example, a matrix can look like `5/m-7//k-4/6` and it will be computed symbolically
-
-## Developing
-Note this script uses NumPy as math library, so it should be installed in order to develop further the script
+### Using variables
+When entering matrices for any operation you can also include variables or expressions, just not divisions (as / is used for element separation, but it will be changed in the future). For example, a matrix can look like `5/m-7//k-4/6` and it will be computed symbolically
