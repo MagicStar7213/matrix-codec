@@ -10,7 +10,7 @@ Matrices should be introduced in a special way. Columns must be separated with s
 You enter the first matrix, hit `Enter ⏎` and then the second matrix.
 
 For example, if I wanted to enter the matrix $`\begin{pmatrix} 1 & -2 & 1\\0 & -3 & 4\\2 & 1 & -1 \end{pmatrix}`$ I would have to type it like this: `1/-2/1//0/-3/4//2/1/-1` 
-and then enter the second matrix $`\begin{bmpmatrixatrix} 2 & -1 & 1\\3 & 0 & -2\\-1 & 4 & 3 \end{pmatrix}`$ which would turn into `2/-1/1//3/0/-2//-1/4/3`.
+and then enter the second matrix $`\begin{pmatrix} 2 & -1 & 1\\3 & 0 & -2\\-1 & 4 & 3 \end{pmatrix}`$ which would turn into `2/-1/1//3/0/-2//-1/4/3`.
 
 The result would then be: $`\begin{pmatrix} -5 & 3 & 8\\-13 & 16 & 18\\8 & -6 & -3 \end{pmatrix}`$
 
