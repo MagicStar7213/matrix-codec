@@ -17,8 +17,10 @@ To define a plane, you must use its implicit equation and the equation must be p
 
 A line is defined the same way, but 2 equations are needed: `r: 3x-y+z-1=0,y+z=-2`
 
+To perform any operation any geometric entities involved **must be defined first**, unlike with vectors.
+
 ### Relative positions
-To get the relative position of two elements they must be defined first. The possible positions are:
+Possible positions are:
 
 | | Points | Line | Plane |
 :-: |:-: | :-: | :-:
@@ -26,5 +28,39 @@ To get the relative position of two elements they must be defined first. The pos
 |Line|❌|Concurrent, parallel, secant or they cross|Line in Plane, parallel or secant
 |Plane|❌|Line in Plane, parallel or secant|(2 planes) Concurrent, parallel or secant
 
-### 3 Planes
-<img src="../../assets/RG3.png" width="256px"/> <img src="../../assets/RG2.png" width="256px"/> <img src="../../assets/RG1.png" width="256px"/>
+#### 3 Planes
+3 planes have a total of 8 possible relative positions, which are described below:
+<table>
+    <thead>
+        <tr>
+            <th style="text-align:center"></th>
+            <th style="text-align:center">RgA = RgA* = 3</th>
+            <th style="text-align:center">RgA = 2, RgA* = 3</th>
+            <th style="text-align:center">RgA = RgA* = 2</th>
+            <th style="text-align:center">RgA = 1, RgA* = 2</th>
+            <th style="text-align:center">RgA = RgA* = 1</th>
+        </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td style="text-align:center">No coincident planes</td>
+        <td rowspan=2><img width="384px" src="../../assets/RG3.png"/></td>
+        <td><img width="256px" src="../../assets/RG23-Ind.png"/></td>
+        <td><img width="256px" src="../../assets/RG2-Ind.png"/></td>
+        <td><img width="256px" src="../../assets/RG12-Ind.png"/></td>
+        <td rowspan=2><img width="384px" src="../../assets/RG1.png"/></td>
+    </tr>
+        <td style="text-align:center">There are coincident planes</td>
+        <td><img width="256px" src="../../assets/RG23-Dep.png"/></td>
+        <td><img width="256px" src="../../assets/RG2-Dep.png"/></td>
+        <td><img width="256px" src="../../assets/RG12-Dep.png"/></td>
+    <tr>
+    </tr>
+    </tbody>
+</table>
+
+### Distances
+To get the distance between 2 elements you just type `d element1,element2` and you will get the distance and, if it is not a number by itself, it will be also expressed numerically. For example, `d r,pi` returns $`3`$ and `d P,r` gives back $`\sqrt{2}\hspace{2mm}(1.414213)`$
+
+### Angles
+Angles between 2 elements is requested with `< r,pi` and it will be given in **radians**. **Only lines and planes** can be introduced, and any point will give an error.
