@@ -21,6 +21,9 @@ class Vector():
     def __mul__(self, other: 'Vector'):
         return self.escalar(other)
     
+    def __rmul__(self, other):
+        return Vector(other*self.x, other*self.y, other*self.z)
+    
     def __xor__(self, other: 'Vector'):
         return self.vectorial(other)
 
