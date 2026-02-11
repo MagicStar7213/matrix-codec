@@ -22,6 +22,7 @@ This is a set of tools that allow to check or utilise individual math-related op
       - [3 Planes](#3-planes)
     - [Distances](#distances)
     - [Angles](#angles)
+    - [Symmetric points](#symmetric-points)
 - [DEVELOPMENT](#development)
 
 
@@ -173,6 +174,9 @@ To get the distance between 2 elements you just type `d element1,element2` and y
 
 #### Angles
 Angles between 2 elements is requested with `< r,pi` and it will be given in **radians**. **Only lines and planes** can be introduced, and any point will give an error.
+
+#### Symmetric points
+A symmetric point with respect to a line or plane can be obtained through `sim P,r`, being `P` a **Point** and `r` a **Line or Plane**. It will return the symmetric point's three coordinates: `(-2,0,-3)`
 
 ## Development
 Math Utils uses SymPy as backend processor, so **Python>=3.9** and `sympy>=1.14` is needed. It might also work with previous versions but it has not been tested.
