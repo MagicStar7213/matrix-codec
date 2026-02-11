@@ -8,6 +8,7 @@ class Vector():
         self.x = x
         self.y = y
         self.z = z
+        self.components = (x,y,z)
     
     def __neg__(self):
         return Vector(-self.x, -self.y, -self.z)
