@@ -73,7 +73,7 @@ def main():
                         eq = Equality(eq,0)
                     elif isinstance(eq, Tuple):
                         eq = tuple(Equality(i,0) for i in eq)
-                    print(f'{sym} ≡ {str(eq).replace("(","{").replace(")","}")}')
+                    print(f'{sym} ≡ {pretty(eq).replace("(","{").replace(")","}")}')
                 else:
                     print(f'{sym}{processed.coordinates}')
 
