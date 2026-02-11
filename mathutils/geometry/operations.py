@@ -1,12 +1,12 @@
-from sympy import Eq, Line, Matrix, Plane, Point
+from sympy import Eq, Line3D, Matrix, Plane, Point3D
 
 from mathutils.matrices.operations import rank
 
 
 def relpos(*geom):
-    if all(isinstance(x, Point) for x in geom):
+    if all(isinstance(x, Point3D) for x in geom):
         return puntos(*geom)
-    elif all(isinstance(x, Line) for x in geom):
+    elif all(isinstance(x, Line3D) for x in geom):
         if len(geom) != 2:
             raise ValueError('Only relative position of 2 lines is allowed')
         else:
@@ -17,38 +17,38 @@ def relpos(*geom):
         else:
             raise ValueError("It's only possible to calculate the relative position of up to 3 planes")
     elif len(geom) == 2:
-        if any(isinstance(x, Line) for x in geom) and any(isinstance(x, Plane) for x in geom):
-            return recta_plano(next(x for x in geom if isinstance(x, Line)), next(x for x in geom if isinstance(x, Plane)),)
-        elif any(isinstance(x, Point) for x in geom) and any(isinstance(x, (Line, Plane)) for x in geom):
-            return punto_recta_plano(next(x for x in geom if isinstance(x, Point)), next(x for x in geom if isinstance(x, (Line, Plane))))
+        if any(isinstance(x, Line3D) for x in geom) and any(isinstance(x, Plane) for x in geom):
+            return recta_plano(next(x for x in geom if isinstance(x, Line3D)), next(x for x in geom if isinstance(x, Plane)),)
+        elif any(isinstance(x, Point3D) for x in geom) and any(isinstance(x, (Line3D, Plane)) for x in geom):
+            return punto_recta_plano(next(x for x in geom if isinstance(x, Point3D)), next(x for x in geom if isinstance(x, (Line3D, Plane))))
 
 
 
 def puntos(*points) -> str:
-    if Point.is_collinear(*points):
+    if Point3D.is_collinear(*points):
         return 'alineados'
-    elif Point.are_coplanar(*points):
+    elif Point3D.are_coplanar(*points):
         return 'coplanarios'
     else:
         return 'ni alineados ni coplanarios'
 
-def punto_recta_plano(p: Point, r: Line | Plane):
+def punto_recta_plano(p: Point3D, r: Line3D | Plane):
     if p in r:
         return 'contenido'
     else:
         return 'no contenido'
 
-def rectas(r1: Line, r2: Line) -> str:
-    if Line.are_concurrent(r1,r2):
+def rectas(r1: Line3D, r2: Line3D) -> str:
+    if Line3D.are_concurrent(r1,r2):
         return 'coincidentes'
-    elif Line.is_parallel(r1,r2):
+    elif Line3D.is_parallel(r1,r2):
         return 'paralelas'
     elif r1.intersection(r2):
         return 'secantes'
     else:
         return 'se cruzan'
 
-def recta_plano(r: Line, p: Plane):
+def recta_plano(r: Line3D, p: Plane):
     if r in p:
         return 'coincidentes'
     elif p.is_parallel(r):
