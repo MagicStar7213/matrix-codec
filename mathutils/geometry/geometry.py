@@ -1,7 +1,7 @@
 from sympy import N, Symbol, Tuple, acos, asin, atan, parse_expr, Equality, Expr, Point3D, pretty, solve, Plane, Line3D
 from sympy.abc import x, y ,z
 from sympy.parsing.sympy_parser import T
-from mathutils.geometry.operations import relpos
+from mathutils.geometry.operations import relpos, sym_point
 from mathutils.parser import construct_string, safe_eval
 import re
 
@@ -48,6 +48,18 @@ def main():
             distance = dist[0].distance(dist[1])
             num_distance = int(N(distance)) if float(N(distance)).is_integer() else float(N(distance))
             print(f'{pretty(distance)}{f" ({num_distance})" if pretty(num_distance) != pretty(distance) else ""}')
+        elif re.match(r"sim \w+,\w+", raw):
+            split = raw.removeprefix("sim ").split(",")
+            simg: list[Line3D | Plane | Point3D] = []
+            for geomid in split:
+                processed, env = process_geometry(geomid, env)
+                if processed:
+                    simg.append(processed)
+            if len(simg) == 2 and any(isinstance(i,Point3D) for i in simg):
+                p = next(i for i in simg if isinstance(i, Point3D))
+                simg.remove(p)
+                simg.insert(0,p)
+                print(sym_point(*simg)) # type: ignore
         elif raw.replace(' ','') == '':
             pass
         else:
