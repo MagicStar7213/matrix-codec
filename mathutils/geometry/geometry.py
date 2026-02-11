@@ -1,7 +1,7 @@
 from sympy import N, Symbol, Tuple, acos, asin, atan, parse_expr, Equality, Expr, Point3D, pretty, solve, Plane, Line3D
 from sympy.abc import x, y ,z
 from sympy.parsing.sympy_parser import T
-from mathutils.geometry.relative_positions import relpos
+from mathutils.geometry.operations import relpos
 from mathutils.parser import construct_string, safe_eval
 import re
 
