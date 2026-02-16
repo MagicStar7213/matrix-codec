@@ -27,6 +27,9 @@ class Vector():
     
     def __xor__(self, other: 'Vector'):
         return self.vectorial(other)
+    
+    def __str__(self) -> str:
+        return str(self.components)
 
     def escalar(self, v: 'Vector'):
         return self.x*v.x + self.y*v.y + self.z*v.z
