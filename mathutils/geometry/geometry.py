@@ -1,11 +1,15 @@
-from sympy import N, Symbol, Tuple, acos, asin, atan, parse_expr, Equality, Expr, Point3D, pretty, solve, Plane, Line3D
+from sympy import N, Symbol, acos, asin, atan, parse_expr, Equality, Expr, Point3D, pretty, solve, Plane, Line3D
 from sympy.abc import x, y ,z
 from sympy.parsing.sympy_parser import T
 from mathutils.geometry.operations import relpos, sym_point
+from mathutils.geometry.vectors import Vector
 from mathutils.parser import construct_string, safe_eval
 import re
 
 
+class VPlane(Plane):
+    def __new__(cls, p1, normal_vector: Vector):
+        return super().__new__(cls, p1, normal_vector=normal_vector.components)
 
 def rel_pos(raw: str, env: dict):
     split = raw.removeprefix('relpos ').split(',')
