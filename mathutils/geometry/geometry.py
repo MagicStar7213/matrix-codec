@@ -94,7 +94,7 @@ def str_to_list(raw: str) -> list[str | list] | tuple[str, list[Expr]]:
                     break
     return stack[0]
 
-def get_plane(eq: Equality) -> Plane:
+def get_plane(eq: Equality) -> VPlane:
     def_point:dict[Symbol,(int | Expr)] = {x:0,y:0,z:0}
     coeffs: list[tuple[Symbol, Expr]] = [(i, eq.lhs.coeff(i)) for i in [x, y, z] if eq.lhs.coeff(i) != 0] # type: ignore
     if len(coeffs) == 1:
@@ -110,10 +110,10 @@ def get_plane(eq: Equality) -> Plane:
     else:
         p1 = Point3D(0,0, solve(eq.subs([(x,0),(y,0)]),z)[0])
     
-    return Plane(p1, normal_vector=(eq.lhs.coeff(x), eq.lhs.coeff(y), eq.lhs.coeff(z))) # type: ignore
+    return VPlane(p1, normal_vector=Vector(eq.lhs.coeff(x), eq.lhs.coeff(y), eq.lhs.coeff(z))) # type: ignore
 
 def parse_equations(raw: list[str | list] | tuple[str, list[Expr]], env: dict):
-    parsed: list[str | list | Point3D | Line3D | Plane] = []
+    parsed: list[str | list | Point3D | Line3D | VPlane] = []
     parsed += list(raw).copy()
     if isinstance(raw, tuple):
         parsed.insert(-1, '=')
@@ -135,7 +135,7 @@ def parse_equations(raw: list[str | list] | tuple[str, list[Expr]], env: dict):
                 raise ValueError('Objects defined by more than 2 equations are not supported')
     return list(map(str, parsed))
 
-def process_geometry(raw: str, env: dict) -> tuple[Point3D | Line3D | Plane | None, dict]:
+def process_geometry(raw: str, env: dict) -> tuple[Point3D | Line3D | VPlane | None, dict]:
     try:
         equations = parse_equations(str_to_list(raw), env)
         parsed, env = safe_eval(equations if isinstance(equations,str) else construct_string(equations), env) # type: ignore
