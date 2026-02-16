@@ -16,7 +16,7 @@ def construct_string(lst: list[str | list]) -> str:
 
 
 
-class SafeEval(ast.NodeVisitor):
+class SafeEval(ast.NodeTransformer):
     def __init__(self, env: dict):
         self.env = env
         self.OPS = {
@@ -37,26 +37,29 @@ class SafeEval(ast.NodeVisitor):
         }
 
     def visit_Module(self, node):
-        for stmt in node.body:
-            self.visit(stmt)
+        node.body = [self.visit(stmt) for stmt in node.body]
+        return node
 
     def visit_Expr(self, node):
-        return self.visit(node.value)
+        node.value = self.visit(node.value)
+        return node
 
     def visit_Assign(self, node):
         if len(node.targets) != 1 or not isinstance(node.targets[0], ast.Name):
             raise ValueError("Invalid assignment")
         name = node.targets[0].id
-        self.env['vars'][name] = self.visit(node.value)
+        node.value = self.visit(node.value)
+        self.env["vars"][name] = safe_eval(ast.unparse(node.value), self.env)[0]
+        return node
 
     def visit_Num(self, node):
-        return node.value
+        return node
 
     def visit_Name(self, node):
         classes = [cls.__name__ for cls in self.env['classes']]
         if node.id not in self.env['whitelist'] and node.id not in self.env['vars'] and node.id not in classes:
             raise NameError(f"Undefined variable '{node.id}'")
-        return self.env['whitelist'][node.id] if node.id in self.env['whitelist'] else self.env['vars'][node.id] if node.id in self.env['vars'] else self.env['classes'][classes.index(node.id)]
+        return node
 
     def visit_Attribute(self, node):
         if type(node.value) is not ast.Name:
@@ -64,19 +67,22 @@ class SafeEval(ast.NodeVisitor):
         if node.value.id not in self.env['vars']:
             raise ValueError(f'Class {node.value.id} cannot be called')
         if 'attrs' in self.env.keys() and node.attr in self.env['attrs']:
-            return getattr(self.env['vars'][node.value.id], node.attr)
+            return node
         else:
             raise ValueError(f'Attribute {node.attr} cannot be called')
 
     def visit_UnaryOp(self, node):
         if type(node.op) in [ast.Not, ast.Invert, ast.UAdd]:
             raise ValueError(f'Operator {type(node.op).__name__} is not allowed')
-        return operator.neg(self.visit(node.operand))
+        node.operand = self.visit(node.operand)
+        return node
 
     def visit_BinOp(self, node):
         if type(node.op) not in self.OPS.keys():
             raise ValueError("Operation not allowed")
-        return self.OPS[type(node.op)](self.visit(node.left), self.visit(node.right))
+        node.left = self.visit(node.left)
+        node.right = self.visit(node.right)
+        return node
 
     def visit_Call(self, node):
         if isinstance(node.func, ast.Attribute):
@@ -84,32 +90,34 @@ class SafeEval(ast.NodeVisitor):
             if method not in self.env['whitelist']:
                 raise ValueError(f"Method {method} not allowed")
             if method in self.env['whitelist'] and type(self.visit(node.func.value)) in self.env['classes']:
-                args = [self.visit(arg) for arg in node.args]
-                if type(node.func.value) is ast.Name and node.func.value.id in self.env['vars']:
-                    return getattr(self.env['vars'][node.func.value.id], method)(*args)
-                else:
-                    return getattr(self.visit(node.func.value), method)(*args)
-
+                node.args = [self.visit(arg) for arg in node.args]
+                return node
             else:
                 raise ValueError(f'{method} cannot be called from {type(self.visit(node.func.value)).__name__}')
 
         elif isinstance(node.func, ast.Name):
             func_name = node.func.id
-            if func_name not in self.ALLOWED_FUNCTIONS and self.visit(node.func) not in self.env['classes']:
+            if func_name not in self.ALLOWED_FUNCTIONS and not any(func_name == cls.__name__ for cls in self.env['classes']):
                 raise ValueError(f"Function '{func_name}' is not allowed")
 
-            args = [self.visit(arg) for arg in node.args]
-            return self.ALLOWED_FUNCTIONS[func_name](*args) if func_name in self.ALLOWED_FUNCTIONS else self.visit(node.func)(*args)
+            node.args = [self.visit(arg) for arg in node.args]
+            if func_name not in self.ALLOWED_FUNCTIONS:
+                node.func=self.visit(node.func)
+            return node
         else:
             raise ValueError('Call not allowed.')
 
     def visit_Tuple(self, node):
-        if type(node.ctx) is ast.Store:
-            raise ValueError('Storing variables as tuple is not allowed')
-        return tuple(self.visit(e) for e in list(node.elts))
+        for e in list(node.elts):
+            self.visit(e) 
+        return ast.Call(
+            func=ast.Name(id='Vector', ctx=ast.Load()),
+            args=node.elts
+        )
 
     def visit_Expression(self, node):
-        return self.visit(node.body)
+        node.body = self.visit(node.body)
+        return node
 
     def generic_visit(self, node):
         raise ValueError(f"Disallowed syntax: {type(node).__name__}")
@@ -117,11 +125,11 @@ class SafeEval(ast.NodeVisitor):
 def safe_eval(code: str, env:dict={}):
     tree = ast.parse(code)
     evaluator = SafeEval(env)
-    evaluator.visit(tree)
+    new_code = ast.unparse(evaluator.visit(tree))
     try:
-        ast.parse(code, mode='eval')
+        ast.parse(new_code, mode='eval')
     except SyntaxError:
-        exec(code, evaluator.env['vars'] | dict((k,v) for k,v in zip([cls.__name__ for cls in env['classes']], env['classes'])))
+        exec(new_code, evaluator.env['vars'] | dict((k,v) for k,v in zip([cls.__name__ for cls in env['classes']], env['classes'])))
         return None, evaluator.env
     else:
-        return eval(code, evaluator.env['vars'] | dict((k,v) for k,v in zip([cls.__name__ for cls in env['classes']], env['classes']))), evaluator.env
+        return eval(new_code, evaluator.env['vars'] | dict((k,v) for k,v in zip([cls.__name__ for cls in env['classes']], env['classes']))), evaluator.env
