@@ -6,76 +6,56 @@ from mathutils.parser import construct_string, safe_eval
 import re
 
 
-def main():
-    env = { 'classes': [Plane, Line3D, Point3D],
-            'whitelist': [],
-            'vars': {}}
-    print("""
- _  _  _ | _|_. _   _  _  _  _ _  _ _|_ _ 
-(_|| |(_||\\/| |(_  (_|(/_(_)| | |(/_ | |\\/
-          /         _|                  /  """)
-    while True:
-        raw = input('>> ')
-        if raw == 'q':
-            return
-        if re.match(r'relpos \w+,\w+(,\w)?', raw):
-            split = raw.removeprefix('relpos ').split(',')
-            relp: list[Point3D | Line3D | Plane] = []
-            for geomid in split:
-                processed, env = process_geometry(geomid, env)
-                if processed:
-                    relp.append(processed)
-            print(relpos(*relp))
-        elif re.match(r'< \w+,\w+', raw):
-            split = raw.removeprefix("< ").split(",")
-            ang: list[Line3D | Plane] = []
-            for geomid in split:
-                processed, env = process_geometry(geomid, env)
-                if processed and not isinstance(processed, Point3D): 
-                    ang.append(processed)
-            try:
-                angle = ang[0].angle_between(ang[1])
-            except AttributeError:
-                angle = ang[1].angle_between(ang[0])
-            print(N(angle) if isinstance(angle, (asin,acos,atan)) else pretty(angle))
-        elif re.match(r"d \w+,\w+", raw):
-            split = raw.removeprefix("d ").split(",")
-            dist: list[Line3D | Plane | Point3D] = []
-            for geomid in split:
-                processed, env = process_geometry(geomid, env)
-                if processed:
-                    dist.append(processed)
-            distance = dist[0].distance(dist[1])
-            num_distance = int(N(distance)) if float(N(distance)).is_integer() else float(N(distance))
-            print(f'{pretty(distance)}{f" ({num_distance})" if pretty(num_distance) != pretty(distance) else ""}')
-        elif re.match(r"sim \w+,\w+", raw):
-            split = raw.removeprefix("sim ").split(",")
-            simg: list[Line3D | Plane | Point3D] = []
-            for geomid in split:
-                processed, env = process_geometry(geomid, env)
-                if processed:
-                    simg.append(processed)
-            if len(simg) == 2 and any(isinstance(i,Point3D) for i in simg):
-                p = next(i for i in simg if isinstance(i, Point3D))
-                simg.remove(p)
-                simg.insert(0,p)
-                print(sym_point(*simg)) # type: ignore
-        elif raw.replace(' ','') == '':
-            pass
-        else:
-            processed, env = process_geometry(raw, env)
-            if processed and processed in list(env['vars'].values()):
-                ind = list(env["vars"].values()).index(processed)
-                sym = pretty(Symbol(list(env['vars'].keys())[ind]))
-                if isinstance(processed, (Line3D, Plane)):
-                    eq = processed.equation()
-                    if isinstance(eq, Expr):
-                        eq = Equality(eq,0)
-                    elif isinstance(eq, Tuple):
-                        eq = tuple(Equality(i,0) for i in eq)
-                    print(f'{sym} ≡ {pretty(eq).replace("(","{").replace(")","}")}')
-                else:
-                    print(f'{sym}{processed.coordinates}')
+
+def rel_pos(raw: str, env: dict):
+    split = raw.removeprefix('relpos ').split(',')
+    relp: list[Point3D | Line3D | VPlane] = []
+    for geomid in split:
+        processed, env = process_geometry(geomid, env)
+        if processed:
+            relp.append(processed)
+    print(relpos(*relp))
+    return env
+
+def angle(raw: str, env: dict):
+    split = raw.removeprefix("< ").split(",")
+    ang: list[Line3D | VPlane] = []
+    for geomid in split:
+        processed, env = process_geometry(geomid, env)
+        if processed and not isinstance(processed, Point3D): 
+            ang.append(processed)
+    try:
+        angle = ang[0].angle_between(ang[1])
+    except AttributeError:
+        angle = ang[1].angle_between(ang[0])
+    print(N(angle) if isinstance(angle, (asin,acos,atan)) else pretty(angle))
+    return env
+
+def distance(raw: str, env: dict):
+    split = raw.removeprefix("d ").split(",")
+    dist: list[Line3D | VPlane | Point3D] = []
+    for geomid in split:
+        processed, env = process_geometry(geomid, env)
+        if processed:
+            dist.append(processed)
+    distance = dist[0].distance(dist[1])
+    num_distance = int(N(distance)) if float(N(distance)).is_integer() else float(N(distance))
+    print(f'{pretty(distance)}{f" ({num_distance})" if pretty(num_distance) != pretty(distance) else ""}')
+    return env
+
+def sim(raw: str, env: dict):
+    split = raw.removeprefix("sim ").split(",")
+    simg: list[Line3D | VPlane | Point3D] = []
+    for geomid in split:
+        processed, env = process_geometry(geomid, env)
+        if processed:
+            simg.append(processed)
+    if len(simg) == 2 and any(isinstance(i,Point3D) for i in simg):
+        p = next(i for i in simg if isinstance(i, Point3D))
+        simg.remove(p)
+        simg.insert(0,p)
+        print(sym_point(*simg))# type: ignore
+    return env
 
 def str_to_list(raw: str) -> list[str | list] | tuple[str,list[Expr]]:
     parsed: list[str | list] = []
