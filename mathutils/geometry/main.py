@@ -3,7 +3,7 @@ import re
 from sympy import Equality, Expr, Line3D, Point3D, Symbol, Tuple, pretty
 
 from .geometry import VPlane, angle, distance, process_geometry, rel_pos, sim
-from .vectors import Vector
+from .vector import Vector
 
 def main():
     env = {"classes": [Vector, VPlane, Line3D, Point3D], "whitelist": [], "vars": {}}
