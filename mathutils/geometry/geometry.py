@@ -137,8 +137,13 @@ def parse_equations(raw: list[str | list] | tuple[str, list[Expr]], env: dict):
 
 def process_geometry(raw: str, env: dict) -> tuple[Point3D | Line3D | VPlane | None, dict]:
     try:
-        equations = parse_equations(str_to_list(raw), env)
-        parsed, env = safe_eval(equations if isinstance(equations,str) else construct_string(equations), env) # type: ignore
+        if ":" in raw and "=" in raw:
+            lst = str_to_list(raw)
+            equations = parse_equations(lst, env)
+            code = equations if isinstance(equations,str) else construct_string(equations) # type: ignore
+        else:
+            code = raw
+        parsed, env = safe_eval(code, env)
     except SyntaxError as e:
         print(f'Syntax error: {e}')
         return None, env
