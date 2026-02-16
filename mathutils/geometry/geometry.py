@@ -61,21 +61,38 @@ def sim(raw: str, env: dict):
         print(sym_point(*simg))# type: ignore
     return env
 
-def str_to_list(raw: str) -> list[str | list] | tuple[str,list[Expr]]:
-    parsed: list[str | list] = []
-    if re.match(r'([A-Z]+\(-?\d(\.\d+)?,-?\d(\.\d+)?(,-?\d(\.\d+)?)?\))', raw):
-        separated = raw.split('(')
-        separated[-1] = separated[-1].removesuffix(')')
-        point = (separated[0], list(map(parse_expr, separated[-1].split(','))))
+def str_to_list(raw: str) -> list[str | list] | tuple[str, list[Expr]]:
+    stack: list[list[str | list]] = [[]]
+    current: list[str | list] = stack[-1]
+    if re.match(r"([A-Z]+\(-?\d(\.\d+)?,-?\d(\.\d+)?(,-?\d(\.\d+)?)?\))", raw):
+        separated = raw.split("(")
+        separated[-1] = separated[-1].removesuffix(")")
+        point = (separated[0], list(map(parse_expr, separated[-1].split(","))))
         return point
     for char in raw:
-        parsed.append(char)
-        if char == ':':
-            parsed = [''.join(list(map(str, parsed[:-1]))), '=']
-            parsed[-1] = '='
-            parsed.append(raw[raw.index(char) + 1:].split(','))
-            break
-    return parsed
+        if char == "(":
+            new_list = []
+            current.append(new_list)
+            stack.append(new_list)
+            current = new_list
+
+        elif char == ")":
+            stack.pop()
+            current = stack[-1]
+        else:
+            if char.isdigit() and current and current[-1] == "-":
+                current[-1] = f"-{char}"
+            elif char == ",":
+                pass
+            else:
+                current.append(char)
+                if char == ":":
+                    var = current.copy()
+                    current.clear()
+                    current.extend(["".join(list(map(str, var[:-1]))), "="])
+                    current.append(raw[raw.index(char) + 1 :].split(","))
+                    break
+    return stack[0]
 
 def get_plane(eq: Equality) -> Plane:
     def_point:dict[Symbol,(int | Expr)] = {x:0,y:0,z:0}
