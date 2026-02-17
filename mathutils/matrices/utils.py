@@ -1,6 +1,23 @@
+import re
 import warnings
 from sympy import Matrix, parse_expr
 
+
+def parse_matrix(raw: str) -> Matrix | None:
+    raw_matrix = re.search(r"\((\d+(?: \d+)*)\)\((\d+(?: \d+)*)\)", re.sub(r"\s{2,}", " ", raw))
+    if raw_matrix:
+        try:
+            dimensions = tuple(map(int,raw_matrix.group(1).split(',')))
+            if not 0 < len(dimensions) < 3:
+                raise ValueError('Matrix dimensions introduced are not valid')
+        except ValueError as e:
+            print(f'Value error: {e}')
+            return None
+        else:
+            if len(dimensions) == 1:
+                dimensions += dimensions
+            elts = list(map(parse_expr, raw_matrix.group(2).split(",")))
+            return Matrix(*dimensions,elts)
 
 def matrix_is_zero(x):
     result = x.is_zero
