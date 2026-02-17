@@ -1,7 +1,10 @@
 import re
 import warnings
-from sympy import Matrix, parse_expr
+from sympy import MutableDenseMatrix, parse_expr
 
+
+class Matrix(MutableDenseMatrix):
+    pass
 
 def parse_matrix(raw: str) -> Matrix | None:
     raw_matrix = re.search(r"\((\d+(?: \d+)*)\)\((\d+(?: \d+)*)\)", re.sub(r"\s{2,}", " ", raw))
