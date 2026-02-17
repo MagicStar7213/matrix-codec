@@ -1,4 +1,4 @@
-from sympy import NonSquareMatrixError, init_printing, Matrix, nsimplify, pprint
+from sympy import NonSquareMatrixError, Matrix, nsimplify, pprint
 from .utils import list_to_matrix
 
 
@@ -124,7 +124,3 @@ class Main:
                     print("Exiting...")
                     return
 
-
-if __name__ == "__main__":
-    init_printing()
-    Main().app()
