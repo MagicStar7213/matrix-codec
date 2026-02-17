@@ -1,11 +1,5 @@
-if __name__ == '__main__':
-    from operations import determinante, adjunta, producto, inversa, rango
-    from codec import Main
-    import sympy
-    sympy.init_printing()
-else:
-    from .operations import determinante, adjunta, producto, inversa, rango
-    from .codec import Main
+from .operations import determinante, adjunta, producto, inversa, rango
+from .codec import Main
 
 
 def matrices():
@@ -61,6 +55,3 @@ def matrices():
             case _:
                 print('ERROR: No existe esa opción.')
                 continue
-
-if __name__ == '__main__':
-    matrices()
