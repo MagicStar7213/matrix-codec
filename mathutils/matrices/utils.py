@@ -7,7 +7,7 @@ class Matrix(MutableDenseMatrix):
     pass
 
 def parse_matrix(raw: str) -> Matrix | None:
-    raw_matrix = re.search(r"\((\d+(?: \d+)*)\)\((\d+(?: \d+)*)\)", re.sub(r"\s{2,}", " ", raw))
+    raw_matrix = re.search(r"\((\d+(?:,\d+)*)\)\((\d+(?: \d+)*)\)", re.sub(r"\s{2,}", " ", raw))
     if raw_matrix:
         try:
             dimensions = tuple(map(int,raw_matrix.group(1).split(',')))
@@ -19,7 +19,7 @@ def parse_matrix(raw: str) -> Matrix | None:
         else:
             if len(dimensions) == 1:
                 dimensions += dimensions
-            elts = list(map(parse_expr, raw_matrix.group(2).split(",")))
+            elts = list(map(parse_expr, raw_matrix.group(2).split(" ")))
             return Matrix(*dimensions,elts)
 
 def matrix_is_zero(x):
