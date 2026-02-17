@@ -1,4 +1,5 @@
-from sympy import Matrix, Expr, LessThan, Mul, Pow, Rational, factor, nan, gcd, prod
+from sympy import Expr, LessThan, Mul, Pow, Rational, factor, nan, gcd, prod
+from .utils import Matrix
 
 
 def del_zero_lines(matrix: Matrix) -> Matrix:

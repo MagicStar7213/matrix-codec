@@ -1,7 +1,8 @@
-from sympy import Eq, Line3D, Matrix, Plane, Point3D
+from sympy import Eq, Line3D, Plane, Point3D
 
 from .vector import Vector
 from mathutils.matrices.operations import rank
+from mathutils.matrices.utils import Matrix
 
 
 def relpos(*geom):
