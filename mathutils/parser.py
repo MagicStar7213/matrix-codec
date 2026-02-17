@@ -114,6 +114,12 @@ class SafeEval(ast.NodeTransformer):
             func=ast.Name(id='Vector', ctx=ast.Load()),
             args=node.elts
         )
+    
+    def visit_List(self, node):
+        node.elts = [self.visit(e) for e in node.elts]
+        if isinstance(node.ctx, ast.Store):
+            raise ValueError("Storing variables as lists is not allowed")
+        return node
 
     def visit_Expression(self, node):
         node.body = self.visit(node.body)
