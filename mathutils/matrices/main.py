@@ -2,11 +2,11 @@ import re
 
 from sympy import NonSquareMatrixError, factor, nsimplify, pprint
 
-from mathutils.matrices.determinants import del_proportional_lines, del_zero_lines
-from mathutils.matrices.utils import Matrix, matrix_is_zero, parse_matrix
 from mathutils.parser import safe_eval
-from .operations import print_rank, rank
 from .codec import Main
+from .determinants import del_proportional_lines, del_zero_lines
+from .operations import print_rank, rank
+from .utils import MATRIX_PATTERN, Matrix, matrix_is_zero, parse_matrix
 
 
 def matrices():
@@ -26,7 +26,7 @@ def matrices():
             return
         elif raw.replace(" ","") == "codec":
             Main().app()
-        elif re.match(r"adj ((\((\d+(?:,\d+))\)\((\w+(?: \w+)*)\))|\w+)", raw):
+        elif re.match(rf"adj (({MATRIX_PATTERN})|\w+)", raw):
             A = get_matrix(raw, 'adj ', env)
             if A:
                 try:
@@ -36,7 +36,7 @@ def matrices():
                 else:
                     print()
                     pprint(factor(nsimplify(adjugate)))
-        elif re.match(r"det ((\((\d+(?:,\d+))\)\((\w+(?: \w+)*)\))|\w+)", raw) or re.match(r"\|(\((\d+(?:,\d+))\)\((\w+(?: \w+)*)\)|\w+)\|", raw):
+        elif re.match(rf"det (({MATRIX_PATTERN})|\w+)", raw) or re.match(rf"\|(({MATRIX_PATTERN})|\w+)\|", raw):
             A = get_matrix(raw, ['det ', '|'], env)
             if A:
                 try:
@@ -45,7 +45,7 @@ def matrices():
                     print("ERROR: Given matrix not square, thus ∄ det A.")
                 else:
                     pprint(factor(nsimplify(determinant)))
-        elif re.match(r"(rg|rango|rank) ((\((\d+(?:,\d+))\)\((\w+(?: \w+)*)\))|\w+)", raw):
+        elif re.match(rf"(rg|rango|rank) (({MATRIX_PATTERN})|\w+)", raw):
             A = get_matrix(raw, ['rg ','rango ','rank '], env)
             if A:
                 A = del_proportional_lines(del_zero_lines(A))
@@ -55,7 +55,7 @@ def matrices():
                 except ValueError:
                     print("ERROR: Mismatched dimensions.")
         else:
-            parsed = re.sub(r"\((\d+(?:,\d+)*)\)\((\d+(?: \d+)*)\)", str(parse_matrix(raw)), raw).replace("^","**")
+            parsed = re.sub(MATRIX_PATTERN, str(parse_matrix(raw)), raw).replace("^","**")
             try:
                 result, env = safe_eval(parsed, env)
             except (ValueError, NameError, TypeError, SyntaxError) as e:

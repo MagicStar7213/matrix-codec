@@ -6,11 +6,13 @@ from sympy import MutableDenseMatrix, parse_expr
 class Matrix(MutableDenseMatrix):
     pass
 
+MATRIX_PATTERN = r"(\d+x\d+)\((\w+(?: \w+)*)\)"
+
 def parse_matrix(raw: str) -> Matrix | None:
-    raw_matrix = re.search(r"\((\d+(?:,\d+)*)\)\((\d+(?: \d+)*)\)", re.sub(r"\s{2,}", " ", raw))
+    raw_matrix = re.search(MATRIX_PATTERN, re.sub(r"\s{2,}", " ", raw))
     if raw_matrix:
         try:
-            dimensions = tuple(map(int,raw_matrix.group(1).split(',')))
+            dimensions = tuple(map(int,raw_matrix.group(1).split('x')))
             if not 0 < len(dimensions) < 3:
                 raise ValueError('Matrix dimensions introduced are not valid')
         except ValueError as e:
