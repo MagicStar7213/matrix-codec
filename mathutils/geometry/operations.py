@@ -1,7 +1,7 @@
 from sympy import Eq, Line3D, Plane, Point3D
 
 from .vector import Vector
-from mathutils.matrices.operations import rank
+from mathutils.matrices.rank import rank
 from mathutils.matrices.utils import Matrix
 
 

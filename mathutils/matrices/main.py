@@ -5,7 +5,7 @@ from sympy import NonSquareMatrixError, factor, nsimplify, pprint
 from mathutils.parser import safe_eval
 from .codec import Main
 from .determinants import del_proportional_lines, del_zero_lines
-from .operations import print_rank, rank
+from .rank import print_rank, rank
 from .utils import MATRIX_PATTERN, Matrix, matrix_is_zero, parse_matrix
 
 
