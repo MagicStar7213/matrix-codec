@@ -32,7 +32,7 @@ def matrices():
                 try:
                     adjugate = A.adjugate()
                 except NonSquareMatrixError:
-                    print("ERROR: Given matrix not square, thus there cannot be an adjugate of A.")
+                    print("ERROR: Given matrix not square, thus ∄ adj A.")
                 else:
                     print()
                     pprint(factor(nsimplify(adjugate)))
@@ -42,7 +42,7 @@ def matrices():
                 try:
                     determinant = A.det(iszerofunc=matrix_is_zero)
                 except NonSquareMatrixError:
-                    print("ERROR: Given matrix not square, thus there cannot be an adjugate of A.")
+                    print("ERROR: Given matrix not square, thus ∄ det A.")
                 else:
                     pprint(factor(nsimplify(determinant)))
         elif re.match(r"(rg|rango|rank) ((\((\d+(?:,\d+))\)\((\w+(?: \w+)*)\))|\w+)", raw):
