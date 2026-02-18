@@ -34,7 +34,6 @@ def del_proportional_lines(matrix: Matrix) -> Matrix:
                             del_rows.append(row1 if LessThan(matrix[row,0], matrix[row1,0]) else row)
     del_rows.reverse()
     for r in del_rows:
-        print(f'Trying to remove row {r}')
         new_matrix.row_del(r)
     del_cols:list[int] = []
     for col in range(matrix.shape[1]):
@@ -56,7 +55,6 @@ def del_proportional_lines(matrix: Matrix) -> Matrix:
                             del_cols.append(col1 if LessThan(matrix[0,col], matrix[0,col1]) else col)
     del_cols.reverse()
     for c in del_cols:
-        print(f'Trying to remove column {c}')
         new_matrix.col_del(c)
     return new_matrix
 
