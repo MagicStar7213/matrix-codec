@@ -1,10 +1,10 @@
+import re
 from sympy import N, Symbol, acos, asin, atan, parse_expr, Equality, Expr, Point3D, pretty, solve, Plane, Line3D
 from sympy.abc import x, y ,z
 from sympy.parsing.sympy_parser import T
 from .operations import relpos, sym_point
 from .vector import Vector
 from mathutils.parser import construct_string, safe_eval
-import re
 
 
 class VPlane(Plane):
@@ -64,11 +64,6 @@ def sim(raw: str, env: dict):
 def str_to_list(raw: str) -> list[str | list] | tuple[str, list[Expr]]:
     stack: list[list[str | list]] = [[]]
     current: list[str | list] = stack[-1]
-    if re.match(r"([A-Z]+\(-?\d(\.\d+)?,-?\d(\.\d+)?(,-?\d(\.\d+)?)?\))", raw):
-        separated = raw.split("(")
-        separated[-1] = separated[-1].removesuffix(")")
-        point = (separated[0], list(map(parse_expr, separated[-1].split(","))))
-        return point
     for char in raw:
         if char == "(":
             new_list = []
@@ -143,6 +138,11 @@ def process_geometry(raw: str, env: dict) -> tuple[Point3D | Line3D | VPlane | N
             code = equations if isinstance(equations,str) else construct_string(equations) # type: ignore
         else:
             code = raw
+            if re.match(r"([A-Z]+\(-?\d(\.\d+)?,-?\d(\.\d+)?(,-?\d(\.\d+)?)?\))", raw):
+                separated = raw.split("(")
+                separated[-1] = separated[-1].removesuffix(")")
+                point = (separated[0], tuple(map(parse_expr, separated[-1].split(","))))
+                code = f"{point[0]}=Point3D{point[1]}"
         parsed, env = safe_eval(code, env)
     except SyntaxError as e:
         print(f'Syntax error: {e}')
