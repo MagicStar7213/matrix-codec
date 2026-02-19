@@ -112,7 +112,8 @@ class SafeEval(ast.NodeTransformer):
             self.visit(e) 
         return ast.Call(
             func=ast.Name(id='Vector', ctx=ast.Load()),
-            args=node.elts
+            args=node.elts,
+            keywords=[]
         )
     
     def visit_List(self, node):
