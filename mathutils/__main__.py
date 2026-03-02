@@ -6,9 +6,11 @@ def main():
     init_printing()
     while True:
         option = input('Elige un campo. Geometría [g], Matrices [m] o Salir [q]: ')
-        match option:
-            case "g": geometry()
-            case "m": matrices()
-            case "q": exit(0)
+        if option == "g":
+            geometry()
+        elif option == "m":
+            matrices()
+        elif option == "q":
+            exit(0)
 
 main()
