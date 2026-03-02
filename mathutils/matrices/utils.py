@@ -6,7 +6,7 @@ from sympy import MutableDenseMatrix, parse_expr
 class Matrix(MutableDenseMatrix):
     pass
 
-MATRIX_PATTERN = r"(\d+x\d+)\((\w+(?: \w+)*)\)"
+MATRIX_PATTERN = r"(\d+(x\d+)?)\((\w+(?: \w+)*)\)"
 
 def parse_matrix(raw: str) -> Matrix | None:
     raw_matrix = re.search(MATRIX_PATTERN, re.sub(r"\s{2,}", " ", raw))
@@ -21,7 +21,7 @@ def parse_matrix(raw: str) -> Matrix | None:
         else:
             if len(dimensions) == 1:
                 dimensions += dimensions
-            elts = list(map(parse_expr, raw_matrix.group(2).split(" ")))
+            elts = list(map(parse_expr, raw_matrix.group(3).split(" ")))
             return Matrix(*dimensions,elts)
 
 def matrix_is_zero(x):
