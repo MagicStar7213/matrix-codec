@@ -22,6 +22,9 @@ def parse_matrix(raw: str) -> Matrix | None:
             if len(dimensions) == 1:
                 dimensions += dimensions
             elts = list(map(parse_expr, raw_matrix.group(3).split(" ")))
+            if len(elts) != dimensions[0]*dimensions[1]:
+                print("Value error: Dimension mismatch. Check if you put the right dimensions or elements.")
+                return None
             return Matrix(*dimensions,elts)
 
 def matrix_is_zero(x):
