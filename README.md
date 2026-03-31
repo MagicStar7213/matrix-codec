@@ -6,13 +6,10 @@ This is a set of tools that allow to check or utilise individual math-related op
 ## Table of Contents
 - [USAGE](#usage)
 - [MATRICES](#matrices)
-  - [Product (Multiplication)](#product-multiplication)
-  - [Determinant](#determinant)
-  - [Rank](#rank)
-  - [Adjugate (conjugate)](#adjugate-conjugate)
+  - [Notation](#notation)
+  - [Usage](#usage-1)
   - [Encoding](#encoding)
   - [Decoding](#decoding)
-  - [Using variables](#using-variables)
 - [GEOMETRY](#geometry)
   - [VECTORS](#vectors)
     - [Dot Product](#dot-product)
@@ -31,59 +28,75 @@ The program is divided into modules that cover each topic. Currently, [**Matrice
 
 ## Matrices
 
-Matrix utils allow you to calculate the product of two matrices, the adjugate/conjugate matrix, the determinant and encode a message using matrices.
+This tool is a console that lets you work with matrices in different ways. Supported operations are addition, subtraction, multiplication, adjugates, powers, determinants and ranks. A message encoder and decoder is also available.
 
-The encoding function only allows uppercase letters and spaces for now.
-Matrices should be introduced in a special way. Columns must be separated with single slashes `/` and rows with double slashes `//`. Also, multiple matrices are separated from each other with spaces  `" "`
+Remember to follow the rules of matrices whe using this tool. Any illegal expression will throw an error.
 
-### Product (Multiplication)
-You enter the first matrix, hit `Enter ⏎` and then the second matrix.
+### Notation
 
-For example, if I wanted to enter the matrix $`\begin{pmatrix} 1 & -2 & 1\\0 & -3 & 4\\2 & 1 & -1 \end{pmatrix}`$ I would have to type it like this: `1/-2/1//0/-3/4//2/1/-1` 
-and then enter the second matrix $`\begin{pmatrix} 2 & -1 & 1\\3 & 0 & -2\\-1 & 4 & 3 \end{pmatrix}`$ which would turn into `2/-1/1//3/0/-2//-1/4/3`.
+Matrices should be introduced in a special way. First, the dimensions must be introduced: `2x3`, and then the elements of the matrix `(1 2 3 4 5 6)`, so that the final result is `2x3(1 2 3 4 5 6)`
+- For *addition* and *subtraction* use conventional notation (A+B and A-B)
+- For *multiplication*, use A<b> * </b>B
+- For *powers* ( A<sup>n</sup> ), use A<b>**</b>n or A^n
+- For *determinants*, use either |A| or **det** A
+- For *ranks*, use either **rg** A | **rango** A | **rank** A
+- For *adjugates*, use **adj** A
 
-The result would then be: $`\begin{pmatrix} -5 & 3 & 8\\-13 & 16 & 18\\8 & -6 & -3 \end{pmatrix}`$
+**NOTE**: If a matrix is square it can be introduced as a single number. For example `2(1 2 3 4)` is the same as entering `2x2(1 2 3 4)`
 
-### Determinant
-You enter the matrix you want to calculate the determinant of, for example $`\begin{vmatrix} 1 & -2 & 1\\0 & -3 & 4\\2 & 1 & -1 \end{vmatrix}`$,
-which you would type as `1/-2/1//0/-3/4//2/1/-1`.
+**IMPORTANT**: It is **not** possible to divide a matrix by **another matrix**, but **it is** by a **number**. 
 
-The output is the result: `-11`
+Variables and expressions can also be used as matrix elements: `2x3(-1 3 -x 0 3y+4 2)` and they will be computed algebraically.
 
-### Rank
-To calculate the rank of any matrix, just enter it, for example: $`\begin{pmatrix} 1 & -2 & 1 & 3\\0 & -3 & 4 & 1\\2 & 1 & -1 & 0 \end{pmatrix}`$ in the program like so: `1/-2/1/3//0/-3/4/1//2/1/-1/0`.
+### Usage
 
-The program will then print the rank of the given matrix: `3`
+With this, any operation can be done by entering the matrix directly or by assigning any of them previously to a variable. e.g.:
+```python
+3(1 -2 1 0 -3 4 2 1 -1) * 3(2 -1 1 3 0 -2 -1 4 3)
+``` 
+is the same as
+```python
+A = 3(1 -2 1 0 -3 4 2 1 -1)
+B = 3(2 -1 1 3 0 -2 -1 4 3)
+A * B
+```
+ and any combination of them. These expressions will return their corresponding results. This one, for example, would return
+ ```
+ 
+⎡-5   3   8 ⎤
+⎢           ⎥
+⎢-13  16  18⎥
+⎢           ⎥
+⎣ 8   -6  -3⎦
+ ```
 
-### Adjugate (conjugate)
-To calculate de adjugate you type the matrix you want, for example this one: $`\begin{pmatrix} 1 & -2 & 1\\0 & -3 & 4\\2 & 1 & -1 \end{pmatrix}`$
-in the form: `1/-2/1//0/-3/4//2/1/-1`.
-
-Result: 
-$`\begin{pmatrix} -1 & 8 & 6\\-1 & -3 & -5\\-5 & -4 & -3 \end{pmatrix}`$
+To access the message encoder/decoder, enter the special command `codec`.
 
 ### Encoding
-You must provide 2 inputs: the **message** and the **encoding matrix**. The message must be in all CAPS and cannot contain any special characters (`,.;:?'"-_+=!@#$%^&*()~|\\[]{}<>/` or accents) nor numbers. For example: `I LOVE PYTHON`
+You must provide 2 inputs: the **message** and the **encoding matrix**. The message must be in all CAPS and cannot contain any special characters (`,.;:?'"-_+=!@#$%^&*()~|\\[]{}<>/` or accents) nor numbers. For example: `I LOVE MATH`
 
 After, choose an encoding matrix. **IT MUST BE SQUARE**, or it won't work. For example
 
 $`\begin{pmatrix}
-1 & 2 & 3\\
-4 & 5 & 6\\
-7 & 8 & 9
+1 & 1 & 0\\
+0 & 2 & 2\\
+3 & 0 & 3
 \end{pmatrix}`$
 
-When we plug it into the program, it looks like this `1/2/3//4/5/6//7/8/9`. Then the program gives the matrix or matrices containing the encoded message:
+When we plug it into the program, it looks like this `3(1 1 0 0 2 2 3 0 3)`. Then the program gives the matrix or matrices containing the encoded message:
 $`\begin{pmatrix}
-45 & 74 & 107\\
-108 & 200 & 230\\
-171 & 326 & 353
+9 & 37 & 13\\
+24 & 54 & 28\\
+63 & 60 & 3
 \end{pmatrix}
 \begin{pmatrix}
-81 & 14 & 0\\
-210 & 56 & 0\\
-339 & 98 & 0
+28 & 0 & 0\\
+16 & 0 & 0\\
+60 & 0 & 0
 \end{pmatrix}`$
+
+**NOTE**: The encoding function only allows uppercase letters and spaces for now.
+
 
 ### Decoding
 To decode a message we need 2 inputs again: the matrix/matrices of the **encoded message** and the **encoding matrix**.
@@ -93,20 +106,19 @@ First you must input the matrices that form the encoded message, just like when 
 Therefore, the matrices 
 
 $`\begin{pmatrix}
-45 & 74 & 107\\
-108 & 200 & 230\\
-171 & 326 & 353
+9 & 37 & 13\\
+24 & 54 & 28\\
+63 & 60 & 3
 \end{pmatrix}
 \begin{pmatrix}
-81 & 14 & 0\\
-210 & 56 & 0\\
-339 & 98 & 0
+28 & 0 & 0\\
+16 & 0 & 0\\
+60 & 0 & 0
 \end{pmatrix}`$
 
-would be introduced into the program like this: `45/74/107//108/200/230//171/326/353 81/14/0//210/56/0//339/98/0`. After, you input the encoding matrix `1/2/3//4/5/6//7/8/9` and it gives us the original message `I LOVE PYTHON`
+would be introduced into the program like this: `3(9 37 13 24 54 28 63 60 3) 3(28 0 0 16 0 0 60 0 0)`. After, you input the encoding matrix `3(1 1 0 0 2 2 3 0 3)` and it gives us the original message `I LOVE MATH`
 
-### Using variables
-When entering matrices for any operation you can also include variables or expressions, just not divisions (as / is used for element separation, but it will be changed in the future). For example, a matrix can look like `5/m-7//k-4/6` and it will be computed symbolically
+
 
 ## Geometry
 This module covers most aspects related to geometry, such as vectors an 3D analytic geometry itself.
