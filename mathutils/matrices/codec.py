@@ -5,8 +5,12 @@ from .utils import list_to_matrix
 def encode(encode_matrix):
     message = input("What message do you want to encode? ")
     if encode_matrix is None:
-        encode_string = [m.split('/') for m in input("Enter encoding matrix numbers separating columns with / and rows with //: \n").split('//')]
-        encode_matrix = list_to_matrix(encode_string)
+        encode_matrix = parse_matrix(input("Enter encoding matrix: "))
+        if encode_matrix is None:
+            if input("There was an error in the encoding matrix. Start over? [Y/n] ").lower() == "y":
+                return encode(encode_matrix)
+            else:
+                return None
     try:
         encode_matrix.inv()
     except NonSquareMatrixError:
@@ -47,10 +51,14 @@ def encode(encode_matrix):
 
 def decode(encode_matrix):
     matrices = input(
-        "Enter matrix numbers separating columns with / and rows with // and separate matrices with spaces ( ): ")
+        "Enter matrices separating each one with one space ( ): ")
     if encode_matrix is None:
-        encode_string = [m.split('/') for m in input("Enter encoding matrix numbers separating columns with / and rows with //: ").split('//')]
-        encode_matrix = list_to_matrix(encode_string)
+        encode_matrix = parse_matrix(input("Enter encoding matrix: "))
+        if encode_matrix is None:
+            if input("There was an error in the encoding matrix. Start over? [Y/n] ").lower() == "y":
+                return decode(encode_matrix)
+            else:
+                return None
     try:
         encode_matrix.inv()
     except NonSquareMatrixError:
@@ -68,7 +76,12 @@ def decode(encode_matrix):
     else:
         result = ""
         for raw_matrix in matrices.split(' '):
-            matrix = list_to_matrix([m.split('/') for m in raw_matrix.split('//')])
+            matrix = parse_matrix(raw_matrix)
+            if matrix is None:
+                if input("There was an error in a message matrix. Start over? [Y/n] ").lower() == "y":
+                    return decode(encode_matrix)
+                else:
+                    return None
             mat_message = encode_matrix.inv()*matrix
             if any(i > 27.5 for line in mat_message.tolist() for i in line):
                 mat_message = matrix*encode_matrix.inv()

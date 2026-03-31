@@ -34,9 +34,6 @@ def matrix_is_zero(x):
         warnings.warn(f"Zero testing of {x} evaluated into None")
     return result
 
-def list_to_matrix(matrix: list[list[str]]) -> Matrix:
-    return Matrix([[parse_expr(x, transformations='all') for x in row] for row in matrix])
-
 def decompose_matrix(matrix_list: list[Matrix]) -> list[Matrix]:
     return_list: list[Matrix] = []
     for A in matrix_list:
