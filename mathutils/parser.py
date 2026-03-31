@@ -121,6 +121,11 @@ class SafeEval(ast.NodeTransformer):
         if isinstance(node.ctx, ast.Store):
             raise ValueError("Storing variables as lists is not allowed")
         return node
+    
+    def visit_Constant(self, node: ast.Constant):
+        if not isinstance(node.value, (str,bytes,int,float,complex,bool)) and node.value and node.value is not Ellipsis:
+            raise ValueError("Constant not allowed")
+        return node
 
     def visit_Expression(self, node):
         node.body = self.visit(node.body)
