@@ -43,7 +43,7 @@ def encode(encode_matrix: Matrix | None):
             matrix = Matrix(array).reshape(order, order).T
             pprint((encode_matrix*matrix).applyfunc(nsimplify))
             print(" ")
-        if input("Do you want to keep the encoding matrix? yes or no: ") == "yes":
+        if input("Do you want to keep the encoding matrix? [Y/n]: ").lower() == "y":
             return encode_matrix
         else:
             return None
@@ -93,7 +93,7 @@ def decode(encode_matrix: Matrix | None):
                     temp_result += abc[round(it)]
             result += temp_result
         print(result)
-        if input("Do you want to keep the encoding matrix? yes or no: ") == "yes":
+        if input("Do you want to keep the encoding matrix? [Y/n]: ").lower() == "y":
             return encode_matrix
         else:
             return None
