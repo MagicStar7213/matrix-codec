@@ -1,6 +1,6 @@
 import re
 
-from sympy import NonSquareMatrixError, factor, nsimplify, pprint
+from sympy import Add, Integer, Mul, NonSquareMatrixError, Rational, Symbol, factor, nsimplify, pprint, srepr
 
 from mathutils.parser import safe_eval
 from .codec import Main
@@ -10,7 +10,7 @@ from .utils import MATRIX_PATTERN, Matrix, matrix_is_zero, parse_matrix
 
 
 def matrices():
-    env = {"classes": [Matrix], "vars": {}, "whitelist": []}
+    env = {"classes": [Matrix, Symbol, Mul, Add, Rational, Integer], "vars": {}, "whitelist": []}
     print("""
     __  __           _            _        
     |  \\/  |   __ _  | |_   _ __  (_) __  __
@@ -55,7 +55,7 @@ def matrices():
                 except ValueError:
                     print("ERROR: Mismatched dimensions.")
         else:
-            parsed = re.sub(MATRIX_PATTERN, str(parse_matrix(raw)), raw).replace("^","**")
+            parsed = re.sub(MATRIX_PATTERN, srepr(parse_matrix(raw)), raw).replace("^","**")
             try:
                 result, env = safe_eval(parsed, env)
             except (ValueError, NameError, TypeError, SyntaxError) as e:
