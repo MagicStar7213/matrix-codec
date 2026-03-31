@@ -1,8 +1,8 @@
-from sympy import NonSquareMatrixError, Matrix, nsimplify, pprint
-from .utils import list_to_matrix
+from sympy import NonSquareMatrixError, nsimplify, pprint
+from .utils import Matrix, parse_matrix
 
 
-def encode(encode_matrix):
+def encode(encode_matrix: Matrix | None):
     message = input("What message do you want to encode? ")
     if encode_matrix is None:
         encode_matrix = parse_matrix(input("Enter encoding matrix: "))
@@ -49,7 +49,7 @@ def encode(encode_matrix):
             return None
 
 
-def decode(encode_matrix):
+def decode(encode_matrix: Matrix | None):
     matrices = input(
         "Enter matrices separating each one with one space ( ): ")
     if encode_matrix is None:
@@ -64,13 +64,13 @@ def decode(encode_matrix):
     except NonSquareMatrixError:
         print("ERROR: Given matrix not square, thus not invertible")
         if input("Try again? [Y/n]").lower() == "y":
-            decode(None)
+            return decode(None)
         else:
             exit(1)
     except ValueError:
         print("ERROR: The determinant of the given matrix is 0, thus it cannot be inverted")
         if input("Try again? [Y/n]").lower() == "y":
-            decode(None)
+            return decode(None)
         else:
             exit(1)
     else:
