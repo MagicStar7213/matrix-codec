@@ -84,6 +84,7 @@ $`\begin{pmatrix}
 \end{pmatrix}`$
 
 When we plug it into the program, it looks like this `3(1 1 0 0 2 2 3 0 3)`. Then the program gives the matrix or matrices containing the encoded message:
+
 $`\begin{pmatrix}
 9 & 37 & 13\\
 24 & 54 & 28\\
