@@ -1,6 +1,7 @@
 import re
 import warnings
 from sympy import MutableDenseMatrix, parse_expr
+from sympy.parsing.sympy_parser import T
 
 
 class Matrix(MutableDenseMatrix):
@@ -21,7 +22,7 @@ def parse_matrix(raw: str) -> Matrix | None:
         else:
             if len(dimensions) == 1:
                 dimensions += dimensions
-            elts = list(map(parse_expr, raw_matrix.group(3).split(" ")))
+            elts = [parse_expr(x, transformations=T[1:5]+T[6]+T[8]+T[7]+T[9:]) for x in raw_matrix.group(3).split(" ")]
             if len(elts) != dimensions[0]*dimensions[1]:
                 print("Value error: Dimension mismatch. Check if you put the right dimensions or elements.")
                 return None
