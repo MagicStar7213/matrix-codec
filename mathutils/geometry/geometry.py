@@ -1,5 +1,5 @@
 import re
-from sympy import N, Symbol, acos, asin, atan, parse_expr, Equality, Expr, Point3D, pretty, solve, Plane, Line3D
+from sympy import N, Mul, Symbol, acos, asin, atan, parse_expr, Equality, Expr, Point3D, pi, pretty, solve, Plane, Line3D
 from sympy.abc import x, y ,z
 from sympy.parsing.sympy_parser import T
 from .operations import relpos, sym_point
@@ -32,7 +32,7 @@ def angle(raw: str, env: dict):
         angle = ang[0].angle_between(ang[1])
     except AttributeError:
         angle = ang[1].angle_between(ang[0])
-    print(N(angle) if isinstance(angle, (asin,acos,atan)) else pretty(angle))
+    print(N(angle) if isinstance(angle, (asin,acos,atan)) else N(2*pi+angle) if isinstance(angle, Mul) else pretty(angle))
     return env
 
 def distance(raw: str, env: dict):
