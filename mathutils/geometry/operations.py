@@ -41,10 +41,11 @@ def punto_recta_plano(p: Point3D, r: Line3D | Plane):
         return 'no contenido'
 
 def rectas(r1: Line3D, r2: Line3D) -> str:
-    if Line3D.are_concurrent(r1,r2):
-        return 'coincidentes'
-    elif Line3D.is_parallel(r1,r2):
-        return 'paralelas'
+    if Line3D.is_parallel(r1,r2):
+        if r1.intersection(r2) and isinstance(r1.intersection(r2)[0], Line3D):
+            return 'coincidentes'
+        else:
+            return 'paralelas'
     elif r1.intersection(r2):
         return 'secantes'
     else:
@@ -60,7 +61,7 @@ def recta_plano(r: Line3D, p: Plane):
 
 def planos(p1: Plane, p2: Plane, p3: Plane | None = None):
     if p3 is None:
-        if p1.are_concurrent(p2):
+        if p1.is_coplanar(p2):
             return 'coincidentes'
         elif p1.is_parallel(p2):
             return 'paralelos'
