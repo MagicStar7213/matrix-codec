@@ -128,13 +128,13 @@ This module covers most aspects related to geometry, such as vectors an 3D analy
 There is a utility for pure vector calculations. It currently has vector **dot** ($`\vec{u}`$ · $`\vec{v}`$) and **crossed** ($`\vec{u}`$ $`\wedge`$ $`\vec{v}`$) product. When $`\vec{u}`$ = $`(2,-1,3)`$ it will be introduced in the tool as `(2,-1,3)`.
 
 For example, having $`\vec{u}`$ = $`(2,-1,0)`$ and $`\vec{v}`$ = $`(1,1,-2)`$, we can **store** those vectors assigning them to a variable (`u = (2,-1,0)` and `v = (1,1,-2)`)
-#### Dot Product
+#### <ins>Dot Product</ins>
 To get the dot product of $`\vec{u}`$ and $`\vec{v}`$ ($`\vec{u}`$ · $`\vec{v}`$) you just need to type in `u*v`, like a regular multiplication. Raw vectors are also accepted `(2,-1,0)*(1,1,-2)`
-#### Cross product
+#### <ins>Cross product</ins>
 Cross product works in a similar way, but only wedge (^) is allowed, so to get the cross product you type `u^v` or `(2,-1,0)^(1,1,-2)`
 
 ### Analytic Geometry
-Math Utils can also work with geometric entities, such as points, lines and planes. To define a point, input the name of the point followed by its coordinates: `A(0,2,1)`
+Math Utils can also work with geometric entities, such as points, lines and planes. To define a point, input the name of the point followed by its coordinates: `P(0,2,1)`
 
 To define a plane, you must use its implicit equation and the equation must be preceded with a colon `:`. `pi: -2x+y-z=0`
 
@@ -142,16 +142,20 @@ A line is defined the same way, but 2 equations are needed: `r: 3x-y+z-1=0,y+z=-
 
 To perform any operation any geometric entities involved **must be defined first**, unlike with vectors.
 
-#### Relative positions
+#### <ins>Relative positions</ins>
+You can also determine the relative position between geometric objects. To do that, you need to enter the `relpos` command, separating the elements to be compared separated just with commas. For example: `relpos r,pi`.
+
+**IMPORTANT**: You can only calculate the relative position between **2 objects**. <ins>Exceptions</ins>: You can calculate the relative position of an **indefinite** number of **points** and of **up to 3 planes**.
+
 Possible positions are:
 
 | | Points | Line | Plane |
 :-: |:-: | :-: | :-:
 |Point| Alligned, coplanar or none | Point in Line or not | Point in Plane or not
-|Line|❌|Concurrent, parallel, secant or they cross|Line in Plane, parallel or secant
-|Plane|❌|Line in Plane, parallel or secant|(2 planes) Concurrent, parallel or secant
+|Line|Point in Line or not|Concurrent, parallel, secant or they cross|Line in Plane, parallel or secant
+|Plane|Point in Plane or not|Line in Plane, parallel or secant|(2 planes) Concurrent, parallel or secant
 
-##### 3 Planes
+##### **3 Planes**
 3 planes have a total of 8 possible relative positions, which are described below:
 <table>
     <thead>
@@ -182,13 +186,13 @@ Possible positions are:
     </tbody>
 </table>
 
-#### Distances
+#### <ins>Distances</ins>
 To get the distance between 2 elements you just type `d element1,element2` and you will get the distance and, if it is not a number by itself, it will be also expressed numerically. For example, `d r,pi` returns $`3`$ and `d P,r` gives back $`\sqrt{2}\hspace{2mm}(1.414213)`$
 
-#### Angles
+#### <ins>Angles</ins>
 Angles between 2 elements is requested with `< r,pi` and it will be given in **radians**. **Only lines and planes** can be introduced, and any point will give an error.
 
-#### Symmetric points
+#### <ins>Symmetric points</ins>
 A symmetric point with respect to a line or plane can be obtained through `sim P,r`, being `P` a **Point** and `r` a **Line or Plane**. It will return the symmetric point's three coordinates: `(-2,0,-3)`
 
 ## Development
