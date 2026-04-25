@@ -1,11 +1,11 @@
 from sympy import NonSquareMatrixError, nsimplify, pprint
-from .utils import Matrix, parse_matrix
+from .utils import Matrix, get_matrix
 
 
 def encode(encode_matrix: Matrix | None):
     message = input("What message do you want to encode? ")
     if encode_matrix is None:
-        encode_matrix = parse_matrix(input("Enter encoding matrix: "))
+        encode_matrix = get_matrix(input("Enter encoding matrix: "))
         if encode_matrix is None:
             if input("There was an error in the encoding matrix. Start over? [Y/n] ").lower() == "y":
                 return encode(encode_matrix)
@@ -53,7 +53,7 @@ def decode(encode_matrix: Matrix | None):
     matrices = input(
         "Enter matrices separating each one with one space ( ): ")
     if encode_matrix is None:
-        encode_matrix = parse_matrix(input("Enter encoding matrix: "))
+        encode_matrix = get_matrix(input("Enter encoding matrix: "))
         if encode_matrix is None:
             if input("There was an error in the encoding matrix. Start over? [Y/n] ").lower() == "y":
                 return decode(encode_matrix)
@@ -76,7 +76,7 @@ def decode(encode_matrix: Matrix | None):
     else:
         result = ""
         for raw_matrix in matrices.split(' '):
-            matrix = parse_matrix(raw_matrix)
+            matrix = get_matrix(raw_matrix)
             if matrix is None:
                 if input("There was an error in a message matrix. Start over? [Y/n] ").lower() == "y":
                     return decode(encode_matrix)

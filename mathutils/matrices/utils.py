@@ -9,7 +9,7 @@ class Matrix(MutableDenseMatrix):
 
 MATRIX_PATTERN = r"(\d+(x\d+)?)\((\S+(?: \S+)*)\)"
 
-def parse_matrix(raw: str) -> Matrix | None:
+def get_matrix(raw: str) -> Matrix | None:
     raw_matrix = re.search(MATRIX_PATTERN, re.sub(r"\s{2,}", " ", raw))
     if raw_matrix:
         try:
