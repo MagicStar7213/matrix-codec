@@ -30,11 +30,31 @@ def get_matrix(raw: str) -> Matrix | None:
             return Matrix(*dimensions,elts)
 
 def parse_matrices(raw: str) -> str:
+    ZEROS_PATTERN = r"O(\d+(x\d+)?)"
+    EYE_PATTERN = r"I(\d+(x\d+)?)"
     parsed = raw
     for match in re.finditer(MATRIX_PATTERN, raw):
         matrix = get_matrix(match.group(0))
         if matrix:
             parsed = parsed.replace(match.group(0), srepr(matrix))
+    for zero in re.finditer(ZEROS_PATTERN, raw):
+        try:
+            dimensions = tuple(map(int,zero.group(1).split('x')))
+            if not 0 < len(dimensions) < 3:
+                raise ValueError('Matrix dimensions introduced are not valid')
+        except ValueError as e:
+            print(f'Value error: {e}')
+        else:
+            parsed = parsed.replace(zero.group(0), srepr(Matrix.zeros(dimensions[0], dimensions[1] if len(dimensions) == 2 else dimensions[0])))
+    for eye in re.finditer(EYE_PATTERN, raw):
+        try:
+            dimensions = tuple(map(int,eye.group(1).split('x')))
+            if not 0 < len(dimensions) < 3:
+                raise ValueError('Matrix dimensions introduced are not valid')
+        except ValueError as e:
+            print(f'Value error: {e}')
+        else:
+            parsed = parsed.replace(eye.group(0), srepr(Matrix.eye(dimensions[0])))
     return parsed
 
 def matrix_is_zero(x):
