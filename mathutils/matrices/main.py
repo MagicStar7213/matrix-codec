@@ -1,12 +1,12 @@
-import re
+import regex as re
 
-from sympy import Add, Integer, Mul, NonSquareMatrixError, Rational, Symbol, factor, nsimplify, pprint, srepr
+from sympy import Add, Integer, Mul, NonSquareMatrixError, Rational, Symbol, factor, nsimplify, pprint
 
 from mathutils.parser import safe_eval
 from .codec import Main
 from .determinants import del_proportional_lines, del_zero_lines
 from .rank import print_rank, rank
-from .utils import MATRIX_PATTERN, Matrix, matrix_is_zero, get_matrix
+from .utils import MATRIX_PATTERN, Matrix, matrix_is_zero, parse_matrices
 
 
 def matrices():
@@ -55,7 +55,7 @@ def matrices():
                 except ValueError:
                     print("ERROR: Mismatched dimensions.")
         else:
-            parsed = re.sub(MATRIX_PATTERN, srepr(get_matrix(raw)), raw).replace("^","**")
+            parsed = parse_matrices(raw).replace("^","**")
             try:
                 result, env = safe_eval(parsed, env)
             except (ValueError, NameError, TypeError, SyntaxError) as e:
@@ -75,7 +75,7 @@ def parse_matrix(raw: str, op: str | list[str], env: dict) -> Matrix:
     if processed in env["vars"]:
         return env["vars"][processed]
     else:
-        matrix = get_matrix(raw)
+        matrix, env = safe_eval(parse_matrices(processed), env)
         if not matrix:
             raise NameError("Matrix could not be found in stored variables nor parsed.")
         else:

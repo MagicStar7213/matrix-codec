@@ -1,16 +1,17 @@
-import re
+import regex as re
 import warnings
-from sympy import MutableDenseMatrix, parse_expr
+from sympy import MutableDenseMatrix, parse_expr, srepr
 from sympy.parsing.sympy_parser import T
 
 
 class Matrix(MutableDenseMatrix):
     pass
 
-MATRIX_PATTERN = r"(\d+(x\d+)?)\((\S+(?: \S+)*)\)"
+MATRIX_PATTERN_OLD = r"(\d+(x\d+)?)\((\S+(?: \S+)*)\)"
+MATRIX_PATTERN = r"(\d+(x\d+)?)(\(([^()]|(?3))+\))"
 
 def get_matrix(raw: str) -> Matrix | None:
-    raw_matrix = re.search(MATRIX_PATTERN, re.sub(r"\s{2,}", " ", raw))
+    raw_matrix = re.search(MATRIX_PATTERN_OLD, re.sub(r"\s{2,}", " ", raw))
     if raw_matrix:
         try:
             dimensions = tuple(map(int,raw_matrix.group(1).split('x')))
@@ -27,6 +28,14 @@ def get_matrix(raw: str) -> Matrix | None:
                 print("Value error: Dimension mismatch. Check if you put the right dimensions or elements.")
                 return None
             return Matrix(*dimensions,elts)
+
+def parse_matrices(raw: str) -> str:
+    parsed = raw
+    for match in re.finditer(MATRIX_PATTERN, raw):
+        matrix = get_matrix(match.group(0))
+        if matrix:
+            parsed = parsed.replace(match.group(0), srepr(matrix))
+    return parsed
 
 def matrix_is_zero(x):
     result = x.is_zero

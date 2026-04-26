@@ -10,7 +10,7 @@ readme = "README.md"
 license = "GPL-3.0-or-later"
 license-files = ["LICENSE*"]
 keywords = ["math", "matrix", "matrices", "vectors"]
-dependencies = ["sympy"]
+dependencies = ["sympy", "regex"]
 requires-python = ">=3.9"
 authors = [{name = "Breixo Montenegro", email = "saltaestrellas@hotmail.com"}]
 maintainers = [{name = "Breixo Montenegro", email = "saltaestrellas@hotmail.com"}]
