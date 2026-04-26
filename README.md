@@ -42,11 +42,35 @@ Matrices should be introduced in a special way. First, the dimensions must be in
 - For *ranks*, use either **rg** A | **rango** A | **rank** A
 - For *adjugates*, use **adj** A
 
+There are also references to special kinds of matrices, such as zero and identity matrices. 
+
+For **zero matrices**, you can enter `Onxm` or `On`, where *n* are the rows and *m* the columns. For example, `O3x4` would return a 3x4 zero matrix and `O3` would give us a 3x3 zero matrix. 
+```python
+>> O3x4
+
+⎡0  0  0  0⎤
+⎢          ⎥
+⎢0  0  0  0⎥
+⎢          ⎥
+⎣0  0  0  0⎦
+```
+
+For **identity matrices**, the notation is `In`, where *n* is the order of the matrix. `I3`, e.g., would return a 3x3 identity matrix.
+```python
+>> I3
+
+⎡1  0  0⎤
+⎢       ⎥
+⎢0  1  0⎥
+⎢       ⎥
+⎣0  0  1⎦
+```
+
 **NOTE**: If a matrix is square it can be introduced as a single number. For example `2(1 2 3 4)` is the same as entering `2x2(1 2 3 4)`
 
-**IMPORTANT**: It is **not** possible to divide a matrix by **another matrix**, but **it is** by a **number**. 
+<ins>**IMPORTANT**</ins>: It is **not** possible to divide a matrix by **another matrix**, but **it is** by a **number**. 
 
-Variables and expressions can also be used as matrix elements: `2x3(-1 3 -x 0 3y+4 2)` and they will be computed algebraically.
+**Variables and expressions** can also be used as matrix elements: `2x3(-1 3 -x 0 3y+4 2)` and they will be computed algebraically.
 
 ### Usage
 
