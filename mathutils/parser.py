@@ -81,7 +81,10 @@ class SafeEval(ast.NodeTransformer):
         if type(node.op) not in self.OPS.keys():
             raise ValueError("Operation not allowed")
         node.left = self.visit(node.left)
-        node.right = self.visit(node.right)
+        if isinstance(node.op, ast.Pow) and isinstance(node.right, ast.Name) and node.right.id.lower() == "t":
+            node = ast.Attribute(value=node.left, attr=node.right.id.upper(), ctx=ast.Load())
+        else:
+            node.right = self.visit(node.right)
         return node
 
     def visit_Call(self, node):
