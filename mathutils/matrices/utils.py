@@ -7,11 +7,10 @@ from sympy.parsing.sympy_parser import T
 class Matrix(MutableDenseMatrix):
     pass
 
-MATRIX_PATTERN_OLD = r"(\d+(x\d+)?)\((\S+(?: \S+)*)\)"
-MATRIX_PATTERN = r"(\d+(x\d+)?)(\(([^()]|(?3))+\))"
+MATRIX_PATTERN = r"(\d+(x\d+)?)(\((([^()]|(?3))+)\))"
 
 def get_matrix(raw: str) -> Matrix | None:
-    raw_matrix = re.search(MATRIX_PATTERN_OLD, re.sub(r"\s{2,}", " ", raw))
+    raw_matrix = re.search(MATRIX_PATTERN, re.sub(r"\s{2,}", " ", raw))
     if raw_matrix:
         try:
             dimensions = tuple(map(int,raw_matrix.group(1).split('x')))
@@ -23,7 +22,7 @@ def get_matrix(raw: str) -> Matrix | None:
         else:
             if len(dimensions) == 1:
                 dimensions += dimensions
-            elts = [parse_expr(x, transformations=T[1:5]+T[6]+T[8]+T[7]+T[9:]) for x in raw_matrix.group(3).split(" ")]
+            elts = [parse_expr(x, transformations=T[1:5]+T[6]+T[8]+T[7]+T[9:]) for x in raw_matrix.group(4).split(" ")]
             if len(elts) != dimensions[0]*dimensions[1]:
                 print("Value error: Dimension mismatch. Check if you put the right dimensions or elements.")
                 return None
