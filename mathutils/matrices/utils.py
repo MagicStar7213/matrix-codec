@@ -1,6 +1,6 @@
 import regex as re
 import warnings
-from sympy import MutableDenseMatrix, parse_expr, srepr
+from sympy import MutableDenseMatrix, NonSquareMatrixError, factor, nsimplify, parse_expr, srepr
 from sympy.parsing.sympy_parser import T
 
 
@@ -8,6 +8,10 @@ class Matrix(MutableDenseMatrix):
     pass
 
 MATRIX_PATTERN = r"(\d+(x\d+)?)(\((([^()]|(?3))+)\))"
+ZEROS_PATTERN = r"O(\d+(x\d+)?)"
+EYE_PATTERN = r"I(\d+(x\d+)?)"
+ADJ_PATTERN = rf"adj ((\()|)({MATRIX_PATTERN}|[^()]+)(?(2)\)|)"
+DET_PATTERN = rf"((\|)|(det ))((\()|)({MATRIX_PATTERN}|[^()]+)(?(5)\)|)(?(2)\|)"
 
 def get_matrix(raw: str) -> Matrix | None:
     raw_matrix = re.search(MATRIX_PATTERN, re.sub(r"\s{2,}", " ", raw))
@@ -28,9 +32,7 @@ def get_matrix(raw: str) -> Matrix | None:
                 return None
             return Matrix(*dimensions,elts)
 
-def parse_matrices(raw: str) -> str:
-    ZEROS_PATTERN = r"O(\d+(x\d+)?)"
-    EYE_PATTERN = r"I(\d+(x\d+)?)"
+def parse_matrices(raw: str, env: dict) -> str:
     parsed = raw
     for match in re.finditer(MATRIX_PATTERN, raw):
         matrix = get_matrix(match.group(0))
