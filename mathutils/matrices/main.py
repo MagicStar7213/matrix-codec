@@ -6,7 +6,7 @@ from mathutils.parser import safe_eval
 from .codec import Main
 from .determinants import del_proportional_lines, del_zero_lines
 from .rank import print_rank, rank
-from .utils import MATRIX_PATTERN, Matrix, parse_matrices
+from .utils import MATRIX_PATTERN, OPERATION_PATTERN, Matrix, parse_matrices
 
 
 def matrices():
@@ -26,7 +26,7 @@ def matrices():
             return
         elif raw.replace(" ","") == "codec":
             Main().app()
-        elif re.match(rf"(rg|rango|rank) ((\()|)({MATRIX_PATTERN}|[^()]+)(?(2)\)|)", raw):
+        elif re.match(rf"(rg|rango|rank) {OPERATION_PATTERN}", raw):
             A = parse_matrices(raw.replace('rg','').replace('rango','').replace('rank',''), env)
             if A:
                 A = del_proportional_lines(del_zero_lines(parse_expr(A)))

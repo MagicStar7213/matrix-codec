@@ -10,7 +10,8 @@ class Matrix(MutableDenseMatrix):
 MATRIX_PATTERN = r"(\d+(x\d+)?)(\((([^()]|(?3))+)\))"
 ZEROS_PATTERN = r"O(\d+(x\d+)?)"
 EYE_PATTERN = r"I(\d+(x\d+)?)"
-ADJ_PATTERN = rf"adj ((\()|)({MATRIX_PATTERN}|[^()]+)(?(2)\)|)"
+OPERATION_PATTERN = rf"((\()|)({MATRIX_PATTERN}|[^()]+)(?(2)\)|)"
+ADJ_PATTERN = rf"adj {OPERATION_PATTERN}"
 DET_PATTERN = rf"((\|)|(det ))((\()|)({MATRIX_PATTERN}|[^()]+)(?(5)\)|)(?(2)\|)"
 
 def get_matrix(raw: str) -> Matrix | None:
